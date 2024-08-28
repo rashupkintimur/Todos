@@ -54,7 +54,7 @@ export const Main: FC<MainProps> = () => {
 
   return (
     <div className="container mx-auto px-4">
-      {filtedTasks ? (
+      {filtedTasks.length ? (
         <TaskDashboard
           tasks={filtedTasks}
           search={search}
