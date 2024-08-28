@@ -10,6 +10,7 @@ type TaskModalProps = {
   changeDescription: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   changeDate: (event: React.ChangeEvent<HTMLInputElement>) => void;
   changePriority: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  createTask: (event: React.FormEvent) => void;
 };
 
 const customStyles = {
@@ -34,6 +35,7 @@ export const TaskModal: FC<TaskModalProps> = ({
   changeDescription,
   changeDate,
   changePriority,
+  createTask,
 }) => {
   return (
     <Modal isOpen={isOpen} style={customStyles}>
@@ -53,7 +55,7 @@ export const TaskModal: FC<TaskModalProps> = ({
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
-      <form className="py-5 px-5 grid gap-3">
+      <form className="py-5 px-5 grid gap-3" onSubmit={createTask}>
         <div className="grid gap-3">
           <label htmlFor="title" className="text-2xl cursor-pointer">
             Заголовок:
@@ -97,7 +99,9 @@ export const TaskModal: FC<TaskModalProps> = ({
             id="priority"
             className="block w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
           >
-            <option value="high">Высокий</option>
+            <option selected value="high">
+              Высокий
+            </option>
             <option value="middle">Средний</option>
             <option value="low">Низкий</option>
           </select>

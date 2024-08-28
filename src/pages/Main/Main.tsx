@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { ITask } from "../../types/ITask";
 import { TaskModal } from "../../ui/TaskModal";
 import { TaskDashboard } from "../../ui/TaskDashboard";
+import { TPriotity } from "../../types/TPriotity";
 
 type MainProps = {};
 
@@ -14,7 +15,7 @@ export const Main: FC<MainProps> = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState<Date | null>(null);
-  const [priority, setPriority] = useState("");
+  const [priority, setPriority] = useState<TPriotity>("high");
   const [search, setSearch] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -31,7 +32,7 @@ export const Main: FC<MainProps> = () => {
   };
 
   const changePriority = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setPriority(event.target.value);
+    setPriority(event.target.value as TPriotity);
   };
 
   const changeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +41,20 @@ export const Main: FC<MainProps> = () => {
 
   const modalHandler = () => {
     setIsOpen((prevState) => !prevState);
+  };
+
+  const createTask = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    setTasks((prevTasks) => [
+      ...prevTasks,
+      { title, description, date, priority } as ITask,
+    ]);
+    modalHandler();
+    setTitle("");
+    setDescription("");
+    setDate(null);
+    setPriority("high");
   };
 
   useEffect(() => {
@@ -54,13 +69,19 @@ export const Main: FC<MainProps> = () => {
 
   return (
     <div className="container mx-auto px-4">
-      {filtedTasks.length ? (
+      {filtedTasks.length > 0 ? (
         <TaskDashboard
           tasks={filtedTasks}
           search={search}
           changeSearch={changeSearch}
         />
-      ) : tasks.length ? (
+      ) : search.trim() ? (
+        <TaskDashboard
+          tasks={filtedTasks}
+          search={search}
+          changeSearch={changeSearch}
+        />
+      ) : tasks.length > 0 ? (
         <TaskDashboard
           tasks={tasks}
           search={search}
@@ -86,6 +107,7 @@ export const Main: FC<MainProps> = () => {
         changeDescription={changeDescription}
         changeDate={changeDate}
         changePriority={changePriority}
+        createTask={createTask}
       />
     </div>
   );

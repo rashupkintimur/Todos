@@ -11,7 +11,7 @@ type TaskProps = {
 
 export const Task: FC<TaskProps> = ({ title, description, date, priority }) => {
   return (
-    <div className="py-4 px-5 bg-blue-100 rounded-md flex justify-between items-center">
+    <div className="py-4 px-5 bg-blue-100 rounded-md flex gap-3 justify-between items-center">
       <div>
         <h4 className="text-3xl text-slate-700 font-semibold mb-2">{title}</h4>
         <p className="text-base text-slate-700 font-light">{description}</p>
@@ -22,9 +22,9 @@ export const Task: FC<TaskProps> = ({ title, description, date, priority }) => {
           {priority === "high" ? (
             <span className="text-red-500">Высокий</span>
           ) : priority === "middle" ? (
-            <span className="text-yellow-500">"Средний"</span>
+            <span className="text-yellow-500">Средний</span>
           ) : (
-            <span className="text-green-500">"Низкий"</span>
+            <span className="text-green-500">Низкий</span>
           )}
         </p>
         <h4 className="text-xl text-slate-700">
