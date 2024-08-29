@@ -111,6 +111,7 @@ export const Main: FC<MainProps> = () => {
       <TaskModal
         title={title}
         description={description}
+        date={date}
         isOpen={modalCreateIsOpen}
         typeModal={"create"}
         setIsOpen={modalCreateTaskHandler}
