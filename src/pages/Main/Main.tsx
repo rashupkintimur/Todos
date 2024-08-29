@@ -1,10 +1,15 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, createContext, useEffect, useState } from "react";
 import { ITask } from "../../types/ITask";
 import { TaskModal } from "../../ui/TaskModal";
 import { TaskDashboard } from "../../ui/TaskDashboard";
 import { TPriotity } from "../../types/TPriotity";
+import { IFormHandlerStates } from "../../types/IFormHandlerStates";
 
 type MainProps = {};
+
+export const FormHandlersStates = createContext<IFormHandlerStates | null>(
+  null
+);
 
 const storedTasks = localStorage.getItem("tasks");
 const storageTasks: ITask[] = storedTasks ? JSON.parse(storedTasks) : [];
@@ -14,33 +19,26 @@ export const Main: FC<MainProps> = () => {
   const [filtedTasks, setFiltredTasks] = useState<ITask[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState("");
   const [priority, setPriority] = useState<TPriotity>("high");
   const [search, setSearch] = useState("");
-  const [modalIsOpen, setIsOpen] = useState(false);
-
-  const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
-  };
-
-  const changeDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(event.target.value);
-  };
-
-  const changeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(new Date(event.target.value));
-  };
-
-  const changePriority = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setPriority(event.target.value as TPriotity);
-  };
+  const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
+  const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
 
   const changeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
 
-  const modalHandler = () => {
-    setIsOpen((prevState) => !prevState);
+  const modalCreateTaskHandler = () => {
+    setModalCreateIsOpen((prevState) => !prevState);
+    if (modalCreateIsOpen) {
+      resetForm();
+    }
+  };
+
+  const modalEditTaskHandler = () => {
+    setModalEditIsOpen((prevState) => !prevState);
+    resetForm();
   };
 
   const createTask = (event: React.FormEvent) => {
@@ -50,11 +48,7 @@ export const Main: FC<MainProps> = () => {
       ...prevTasks,
       { title, description, date, priority } as ITask,
     ]);
-    modalHandler();
-    setTitle("");
-    setDescription("");
-    setDate(null);
-    setPriority("high");
+    modalCreateTaskHandler();
   };
 
   useEffect(() => {
@@ -67,25 +61,41 @@ export const Main: FC<MainProps> = () => {
     );
   }, [search]);
 
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setDate("");
+    setPriority("high");
+  };
+
   return (
     <div className="container mx-auto px-4">
-      {filtedTasks.length > 0 ? (
+      {filtedTasks.length ? (
         <TaskDashboard
           tasks={filtedTasks}
           search={search}
+          isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
+          setIsOpen={modalEditTaskHandler}
+          setTasks={setTasks}
         />
       ) : search.trim() ? (
         <TaskDashboard
           tasks={filtedTasks}
           search={search}
+          isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
+          setIsOpen={modalEditTaskHandler}
+          setTasks={setTasks}
         />
-      ) : tasks.length > 0 ? (
+      ) : tasks.length ? (
         <TaskDashboard
           tasks={tasks}
           search={search}
+          isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
+          setIsOpen={modalEditTaskHandler}
+          setTasks={setTasks}
         />
       ) : (
         <h2 className="text-6xl text-center font-mono pt-10 font-bold text-slate-900">
@@ -93,7 +103,7 @@ export const Main: FC<MainProps> = () => {
         </h2>
       )}
       <button
-        onClick={modalHandler}
+        onClick={modalCreateTaskHandler}
         className="text-8xl text-white bg-black fixed bottom-16 right-24 rounded-full w-24 h-24 flex items-center justify-center bg-red-500 hover:bg-red-600 active:bg-red-700 duration-150"
       >
         +
@@ -101,13 +111,14 @@ export const Main: FC<MainProps> = () => {
       <TaskModal
         title={title}
         description={description}
-        isOpen={modalIsOpen}
-        setIsOpen={modalHandler}
-        changeTitle={changeTitle}
-        changeDescription={changeDescription}
-        changeDate={changeDate}
-        changePriority={changePriority}
-        createTask={createTask}
+        isOpen={modalCreateIsOpen}
+        typeModal={"create"}
+        setIsOpen={modalCreateTaskHandler}
+        setTitle={setTitle}
+        setDesciption={setDescription}
+        setDate={setDate}
+        setPriority={setPriority}
+        submitForm={createTask}
       />
     </div>
   );

@@ -1,17 +1,23 @@
-import React, { FC } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import { TaskList } from "../TaskList";
 import { ITask } from "../../types/ITask";
 
 type TaskDashboardProps = {
   tasks: ITask[];
   search: string;
+  isOpen: boolean;
   changeSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setIsOpen: () => void;
+  setTasks: Dispatch<SetStateAction<ITask[]>>;
 };
 
 export const TaskDashboard: FC<TaskDashboardProps> = ({
   tasks,
   search,
+  isOpen,
   changeSearch,
+  setIsOpen,
+  setTasks,
 }) => {
   return (
     <div>
@@ -24,7 +30,12 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
           placeholder="Поиск..."
         />
       </div>
-      <TaskList tasks={tasks} />
+      <TaskList
+        tasks={tasks}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        setTasks={setTasks}
+      />
     </div>
   );
 };

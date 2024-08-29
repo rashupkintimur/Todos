@@ -1,16 +1,21 @@
-import React, { FC } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import Modal from "react-modal";
+import { FormButton } from "../FormButton";
+import { TModal } from "../../types/TModal";
+import { TPriotity } from "../../types/TPriotity";
 
 type TaskModalProps = {
   title: string;
   description: string;
+  date: string;
   isOpen: boolean;
+  typeModal: TModal;
   setIsOpen: () => void;
-  changeTitle: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  changeDescription: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  changeDate: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  changePriority: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  createTask: (event: React.FormEvent) => void;
+  setTitle: Dispatch<SetStateAction<string>>;
+  setDesciption: Dispatch<SetStateAction<string>>;
+  setDate: Dispatch<SetStateAction<string>>;
+  setPriority: Dispatch<SetStateAction<TPriotity>>;
+  submitForm: (event: React.FormEvent) => void;
 };
 
 const customStyles = {
@@ -29,14 +34,32 @@ const customStyles = {
 export const TaskModal: FC<TaskModalProps> = ({
   title,
   description,
+  date,
   isOpen,
+  typeModal,
   setIsOpen,
-  changeTitle,
-  changeDescription,
-  changeDate,
-  changePriority,
-  createTask,
+  setTitle,
+  setDesciption,
+  setDate,
+  setPriority,
+  submitForm,
 }) => {
+  const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value);
+  };
+
+  const changeDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDesciption(event.target.value);
+  };
+
+  const changeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(event.target.value);
+  };
+
+  const changePriority = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setPriority(event.target.value as TPriotity);
+  };
+
   return (
     <Modal isOpen={isOpen} style={customStyles}>
       <button onClick={setIsOpen} className="absolute right-7 top-7">
@@ -55,7 +78,7 @@ export const TaskModal: FC<TaskModalProps> = ({
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
-      <form className="py-5 px-5 grid gap-3" onSubmit={createTask}>
+      <form className="py-5 px-5 grid gap-3" onSubmit={submitForm}>
         <div className="grid gap-3">
           <label htmlFor="title" className="text-2xl cursor-pointer">
             Заголовок:
@@ -84,6 +107,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             Дата окончания:
           </label>
           <input
+            value={date}
             onChange={changeDate}
             id="date"
             type="date"
@@ -106,9 +130,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             <option value="low">Низкий</option>
           </select>
         </div>
-        <button className="bg-red-500 text-lg text-white px-4 py-2 rounded justify-self-start">
-          Создать
-        </button>
+        <FormButton type={typeModal} />
       </form>
     </Modal>
   );
