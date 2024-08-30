@@ -8,6 +8,7 @@ type TaskModalProps = {
   title: string;
   description: string;
   date: string;
+  priority: TPriotity;
   isOpen: boolean;
   typeModal: TModal;
   setIsOpen: () => void;
@@ -28,6 +29,7 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    backgroundColor: "rgb(71 85 105 / var(--tw-bg-opacity))",
   },
 };
 
@@ -35,6 +37,7 @@ export const TaskModal: FC<TaskModalProps> = ({
   title,
   description,
   date,
+  priority,
   isOpen,
   typeModal,
   setIsOpen,
@@ -69,10 +72,11 @@ export const TaskModal: FC<TaskModalProps> = ({
           height="24"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
+          stroke="none"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          className="fill-white stroke-white"
         >
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
@@ -80,7 +84,10 @@ export const TaskModal: FC<TaskModalProps> = ({
       </button>
       <form className="py-5 px-5 grid gap-3" onSubmit={submitForm}>
         <div className="grid gap-3">
-          <label htmlFor="title" className="text-2xl cursor-pointer">
+          <label
+            htmlFor="title"
+            className="text-2xl cursor-pointer dark:text-white"
+          >
             Заголовок:
           </label>
           <input
@@ -92,7 +99,10 @@ export const TaskModal: FC<TaskModalProps> = ({
           />
         </div>
         <div className="grid gap-3">
-          <label htmlFor="description" className="text-2xl cursor-pointer">
+          <label
+            htmlFor="description"
+            className="text-2xl cursor-pointer dark:text-white"
+          >
             Описание:
           </label>
           <textarea
@@ -103,7 +113,10 @@ export const TaskModal: FC<TaskModalProps> = ({
           />
         </div>
         <div className="grid gap-3">
-          <label htmlFor="date" className="text-2xl cursor-pointer">
+          <label
+            htmlFor="date"
+            className="text-2xl cursor-pointer dark:text-white"
+          >
             Дата окончания:
           </label>
           <input
@@ -115,7 +128,10 @@ export const TaskModal: FC<TaskModalProps> = ({
           />
         </div>
         <div className="grid gap-3 mb-4">
-          <label htmlFor="priority" className="text-2xl cursor-pointer">
+          <label
+            htmlFor="priority"
+            className="text-2xl cursor-pointer dark:text-white"
+          >
             Приоритет:
           </label>
           <select
@@ -123,11 +139,18 @@ export const TaskModal: FC<TaskModalProps> = ({
             id="priority"
             className="block w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
           >
-            <option selected value="high">
+            <option selected={priority === "high" ? true : false} value="high">
               Высокий
             </option>
-            <option value="middle">Средний</option>
-            <option value="low">Низкий</option>
+            <option
+              selected={priority === "middle" ? true : false}
+              value="middle"
+            >
+              Средний
+            </option>
+            <option selected={priority === "low" ? true : false} value="low">
+              Низкий
+            </option>
           </select>
         </div>
         <FormButton type={typeModal} />

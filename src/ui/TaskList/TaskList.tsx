@@ -25,6 +25,7 @@ export const TaskList: FC<TaskListProps> = ({
             date={task.date}
             priority={task.priority}
             id={index}
+            tasks={tasks}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             setTasks={setTasks}

@@ -44,10 +44,14 @@ export const Main: FC<MainProps> = () => {
   const createTask = (event: React.FormEvent) => {
     event.preventDefault();
 
-    setTasks((prevTasks) => [
-      ...prevTasks,
+    const updatedTasks = [
+      ...tasks,
       { title, description, date, priority } as ITask,
-    ]);
+    ];
+
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+
     modalCreateTaskHandler();
   };
 
@@ -69,7 +73,7 @@ export const Main: FC<MainProps> = () => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-5">
       {filtedTasks.length ? (
         <TaskDashboard
           tasks={filtedTasks}
@@ -112,6 +116,7 @@ export const Main: FC<MainProps> = () => {
         title={title}
         description={description}
         date={date}
+        priority={priority}
         isOpen={modalCreateIsOpen}
         typeModal={"create"}
         setIsOpen={modalCreateTaskHandler}

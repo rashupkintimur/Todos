@@ -5,6 +5,7 @@ import { TPriotity } from "../../types/TPriotity";
 
 type TaskProps = ITask & {
   id: number;
+  tasks: ITask[];
   isOpen: boolean;
   setIsOpen: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
@@ -16,6 +17,7 @@ export const Task: FC<TaskProps> = ({
   date,
   priority,
   id,
+  tasks,
   isOpen,
   setIsOpen,
   setTasks,
@@ -23,23 +25,24 @@ export const Task: FC<TaskProps> = ({
   const [titleTask, setTitleTask] = useState(title);
   const [descriptionTask, setDescriptionTask] = useState(description);
   const [dateTask, setDateTask] = useState(date);
-  const [priorityTask, setPriorityTask] = useState<TPriotity>("high");
+  const [priorityTask, setPriorityTask] = useState<TPriotity>(priority);
 
   const editTask = (event: React.FormEvent) => {
     event.preventDefault();
 
-    setTasks((prevTasks) =>
-      prevTasks.map((prevTask, index) => {
-        if (index === id) {
-          prevTask.title = titleTask;
-          prevTask.description = descriptionTask;
-          prevTask.date = dateTask;
-          prevTask.priority = priorityTask;
-        }
+    const updatedTasks = tasks.map((task, index) => {
+      if (index === id) {
+        task.title = titleTask;
+        task.description = descriptionTask;
+        task.date = dateTask;
+        task.priority = priorityTask;
+      }
 
-        return prevTask;
-      })
-    );
+      return task;
+    });
+
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
 
     setIsOpen();
   };
@@ -81,6 +84,7 @@ export const Task: FC<TaskProps> = ({
         title={titleTask}
         description={descriptionTask}
         date={dateTask}
+        priority={priorityTask}
         isOpen={isOpen}
         typeModal={"edit"}
         setIsOpen={setIsOpen}
