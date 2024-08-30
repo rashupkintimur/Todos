@@ -12,11 +12,11 @@ type TaskProps = ITask & {
 };
 
 export const Task: FC<TaskProps> = ({
+  id,
   title,
   description,
   date,
   priority,
-  id,
   tasks,
   isOpen,
   setIsOpen,
@@ -27,11 +27,9 @@ export const Task: FC<TaskProps> = ({
   const [dateTask, setDateTask] = useState(date);
   const [priorityTask, setPriorityTask] = useState<TPriotity>(priority);
 
-  const editTask = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const updatedTasks = tasks.map((task, index) => {
-      if (index === id) {
+  const editTask = () => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === id) {
         task.title = titleTask;
         task.description = descriptionTask;
         task.date = dateTask;
@@ -47,30 +45,40 @@ export const Task: FC<TaskProps> = ({
     setIsOpen();
   };
 
+  const deleteTask = () => {
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+
+    setIsOpen();
+  };
+
   return (
-    <div className="py-4 px-5 bg-blue-100 rounded-md flex gap-3 justify-between items-center">
+    <div className="py-4 px-5 bg-blue-100 dark:bg-zinc-800 rounded-md flex gap-3 justify-between items-center">
       <div>
-        <h4 className="text-3xl text-slate-700 font-semibold mb-2 overflow-hidden whitespace-nowrap text-ellipsis">
+        <h4 className="text-3xl text-slate-700 dark:text-white font-semibold mb-2 overflow-hidden whitespace-nowrap text-ellipsis">
           {title}
         </h4>
-        <p className="text-base text-slate-700 font-light overflow-hidden whitespace-nowrap text-ellipsis">
+        <p className="text-base text-slate-700 dark:text-white font-light overflow-hidden whitespace-nowrap text-ellipsis">
           {description}
         </p>
       </div>
       <div className="flex gap-7">
         <div>
-          <p className="text-xl mb-4 text-slate-700">
+          <p className="text-xl mb-4 text-slate-700 dark:text-white">
             Приоритет:{" "}
             {priority === "high" ? (
-              <span className="text-red-500 font-light">Высокий</span>
+              <span className="text-red-500 font-medium">Высокий</span>
             ) : priority === "middle" ? (
-              <span className="text-yellow-500 font-light">Средний</span>
+              <span className="text-yellow-500 font-medium">Средний</span>
             ) : (
-              <span className="text-green-500 font-light">Низкий</span>
+              <span className="text-green-500 font-medium">Низкий</span>
             )}
           </p>
-          <h4 className="text-xl text-slate-700">
-            Дата окончания: <span className="font-light">{date}</span>
+          <h4 className="text-xl text-slate-700 dark:text-white">
+            Дата окончания:{" "}
+            <span className="font-light dark:text-white">{date}</span>
           </h4>
         </div>
         <button
@@ -92,7 +100,8 @@ export const Task: FC<TaskProps> = ({
         setDesciption={setDescriptionTask}
         setDate={setDateTask}
         setPriority={setPriorityTask}
-        submitForm={editTask}
+        editTask={editTask}
+        deleteTask={deleteTask}
       />
     </div>
   );

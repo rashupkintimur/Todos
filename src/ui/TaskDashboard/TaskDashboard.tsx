@@ -25,7 +25,7 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
         <input
           onChange={changeSearch}
           value={search}
-          className="p-3 rounded border border-gray-300 w-1/3"
+          className="p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white"
           type="text"
           placeholder="Поиск..."
         />

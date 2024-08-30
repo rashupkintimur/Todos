@@ -9,7 +9,7 @@ export const Layout: FC<LayoutProps> = () => {
   return (
     <ThemeProvider>
       <Header />
-      <main className="pt-10 pb-10 dark:bg-slate-950 flex-grow">
+      <main className="pt-10 pb-10 dark:bg-zinc-950 flex-grow">
         <Main />
       </main>
     </ThemeProvider>

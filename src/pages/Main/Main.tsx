@@ -4,6 +4,7 @@ import { TaskModal } from "../../ui/TaskModal";
 import { TaskDashboard } from "../../ui/TaskDashboard";
 import { TPriotity } from "../../types/TPriotity";
 import { IFormHandlerStates } from "../../types/IFormHandlerStates";
+import { getRandomNumber } from "../../utils/getRandomNumber";
 
 type MainProps = {};
 
@@ -41,12 +42,16 @@ export const Main: FC<MainProps> = () => {
     resetForm();
   };
 
-  const createTask = (event: React.FormEvent) => {
-    event.preventDefault();
-
+  const createTask = () => {
     const updatedTasks = [
       ...tasks,
-      { title, description, date, priority } as ITask,
+      {
+        id: getRandomNumber(1, 10000000),
+        title,
+        description,
+        date,
+        priority,
+      } as ITask,
     ];
 
     setTasks(updatedTasks);
@@ -102,7 +107,7 @@ export const Main: FC<MainProps> = () => {
           setTasks={setTasks}
         />
       ) : (
-        <h2 className="text-6xl text-center font-mono pt-10 font-bold text-slate-900">
+        <h2 className="text-6xl text-center font-mono pt-10 font-bold text-slate-900 dark:text-white">
           Задач пока нет... 😥
         </h2>
       )}
@@ -124,7 +129,7 @@ export const Main: FC<MainProps> = () => {
         setDesciption={setDescription}
         setDate={setDate}
         setPriority={setPriority}
-        submitForm={createTask}
+        createTask={createTask}
       />
     </div>
   );

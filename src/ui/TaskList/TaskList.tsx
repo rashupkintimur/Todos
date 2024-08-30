@@ -17,14 +17,14 @@ export const TaskList: FC<TaskListProps> = ({
 }) => {
   return (
     <ul className="grid gap-5">
-      {...tasks.map((task, index) => (
+      {...tasks.map((task) => (
         <li>
           <Task
+            id={task.id}
             title={task.title}
             description={task.description}
             date={task.date}
             priority={task.priority}
-            id={index}
             tasks={tasks}
             isOpen={isOpen}
             setIsOpen={setIsOpen}

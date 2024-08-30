@@ -18,7 +18,7 @@ export const ThemeButton: FC<ThemeButtonProps> = ({ theme, changeTheme }) => {
         className={`${theme === "dark" ? "hidden" : ""}`}
       >
         <circle cx="12" cy="12" r="5" fill="none" className="fill-slate-900" />
-        <g stroke="none" className="stroke-slate-900" stroke-width="2">
+        <g stroke="none" className="stroke-slate-900" strokeWidth="2">
           <line x1="12" y1="2" x2="12" y2="6" />
           <line x1="12" y1="18" x2="12" y2="22" />
           <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" />

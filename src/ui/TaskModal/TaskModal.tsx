@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 import Modal from "react-modal";
 import { FormButton } from "../FormButton";
-import { TModal } from "../../types/TModal";
+import { TButtonModal } from "../../types/TButtonModal";
 import { TPriotity } from "../../types/TPriotity";
 
 type TaskModalProps = {
@@ -10,13 +10,15 @@ type TaskModalProps = {
   date: string;
   priority: TPriotity;
   isOpen: boolean;
-  typeModal: TModal;
+  typeModal: TButtonModal;
   setIsOpen: () => void;
   setTitle: Dispatch<SetStateAction<string>>;
   setDesciption: Dispatch<SetStateAction<string>>;
   setDate: Dispatch<SetStateAction<string>>;
   setPriority: Dispatch<SetStateAction<TPriotity>>;
-  submitForm: (event: React.FormEvent) => void;
+  createTask?: () => void;
+  editTask?: () => void;
+  deleteTask?: () => void;
 };
 
 const customStyles = {
@@ -29,7 +31,6 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    backgroundColor: "rgb(71 85 105 / var(--tw-bg-opacity))",
   },
 };
 
@@ -45,8 +46,16 @@ export const TaskModal: FC<TaskModalProps> = ({
   setDesciption,
   setDate,
   setPriority,
-  submitForm,
+  createTask,
+  editTask,
+  deleteTask,
 }) => {
+  if (document.body.classList.contains("dark")) {
+    customStyles.content.backgroundColor = "rgb(39 39 42)";
+  } else {
+    customStyles.content.backgroundColor = "rgb(255, 255, 255)";
+  }
+
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
@@ -63,6 +72,8 @@ export const TaskModal: FC<TaskModalProps> = ({
     setPriority(event.target.value as TPriotity);
   };
 
+  const defaultFunction = () => {};
+
   return (
     <Modal isOpen={isOpen} style={customStyles}>
       <button onClick={setIsOpen} className="absolute right-7 top-7">
@@ -76,13 +87,16 @@ export const TaskModal: FC<TaskModalProps> = ({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="fill-white stroke-white"
+          className="stroke-black dark:stroke-white"
         >
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
-      <form className="py-5 px-5 grid gap-3" onSubmit={submitForm}>
+      <form
+        className="py-5 px-5 grid gap-3"
+        onSubmit={(event: React.FormEvent) => event.preventDefault()}
+      >
         <div className="grid gap-3">
           <label
             htmlFor="title"
@@ -95,7 +109,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             onChange={changeTitle}
             id="title"
             type="text"
-            className="p-2 text-slate-950 rounded border border-gray-300"
+            className="p-2 text-slate-950 rounded border border-gray-300 dark:bg-zinc-800 dark:text-white"
           />
         </div>
         <div className="grid gap-3">
@@ -109,7 +123,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             value={description}
             onChange={changeDescription}
             id="description"
-            className="p-2 text-slate-950 rounded border border-gray-300 resize-none h-28"
+            className="p-2 text-slate-950 rounded border border-gray-300 resize-none h-28 dark:bg-zinc-800 dark:text-white"
           />
         </div>
         <div className="grid gap-3">
@@ -124,7 +138,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             onChange={changeDate}
             id="date"
             type="date"
-            className="rounded p-2 text-slate-950 border border-gray-300 cursor-pointer"
+            className="rounded p-2 text-slate-950 border border-gray-300 cursor-pointer dark:bg-zinc-800 dark:text-white"
           />
         </div>
         <div className="grid gap-3 mb-4">
@@ -137,7 +151,7 @@ export const TaskModal: FC<TaskModalProps> = ({
           <select
             onChange={changePriority}
             id="priority"
-            className="block w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+            className="block w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer dark:bg-zinc-800 dark:text-white"
           >
             <option selected={priority === "high" ? true : false} value="high">
               Высокий
@@ -153,7 +167,22 @@ export const TaskModal: FC<TaskModalProps> = ({
             </option>
           </select>
         </div>
-        <FormButton type={typeModal} />
+        <div className="flex gap-5">
+          <FormButton
+            onClick={
+              typeModal === "create"
+                ? createTask || defaultFunction
+                : editTask || defaultFunction
+            }
+            type={typeModal}
+          />
+          {typeModal === "edit" ? (
+            <FormButton
+              onClick={deleteTask || defaultFunction}
+              type={"delete"}
+            />
+          ) : null}
+        </div>
       </form>
     </Modal>
   );
