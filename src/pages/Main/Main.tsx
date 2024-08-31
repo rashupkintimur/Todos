@@ -5,6 +5,7 @@ import { TaskDashboard } from "../../ui/TaskDashboard";
 import { TPriotity } from "../../types/TPriotity";
 import { IFormHandlerStates } from "../../types/IFormHandlerStates";
 import { getRandomNumber } from "../../utils/getRandomNumber";
+import { IError } from "../../types/IError";
 
 type MainProps = {};
 
@@ -22,6 +23,7 @@ export const Main: FC<MainProps> = () => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [priority, setPriority] = useState<TPriotity>("high");
+  const [errors, setErrors] = useState<IError>({});
   const [search, setSearch] = useState("");
   const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
@@ -75,6 +77,7 @@ export const Main: FC<MainProps> = () => {
     setDescription("");
     setDate("");
     setPriority("high");
+    setErrors({});
   };
 
   return (
@@ -83,28 +86,34 @@ export const Main: FC<MainProps> = () => {
         <TaskDashboard
           tasks={filtedTasks}
           search={search}
+          errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
           setIsOpen={modalEditTaskHandler}
           setTasks={setTasks}
+          setErrors={setErrors}
         />
       ) : search.trim() ? (
         <TaskDashboard
           tasks={filtedTasks}
           search={search}
+          errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
           setIsOpen={modalEditTaskHandler}
           setTasks={setTasks}
+          setErrors={setErrors}
         />
       ) : tasks.length ? (
         <TaskDashboard
           tasks={tasks}
           search={search}
+          errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
           setIsOpen={modalEditTaskHandler}
           setTasks={setTasks}
+          setErrors={setErrors}
         />
       ) : (
         <h2 className="text-6xl text-center font-mono pt-10 font-bold text-slate-900 dark:text-white">
@@ -122,9 +131,11 @@ export const Main: FC<MainProps> = () => {
         description={description}
         date={date}
         priority={priority}
+        errors={errors}
         isOpen={modalCreateIsOpen}
         typeModal={"create"}
         setIsOpen={modalCreateTaskHandler}
+        setErrors={setErrors}
         setTitle={setTitle}
         setDesciption={setDescription}
         setDate={setDate}

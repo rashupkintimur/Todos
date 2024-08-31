@@ -1,23 +1,28 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 import { TaskList } from "../TaskList";
 import { ITask } from "../../types/ITask";
+import { IError } from "../../types/IError";
 
 type TaskDashboardProps = {
   tasks: ITask[];
   search: string;
+  errors: IError;
   isOpen: boolean;
   changeSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setIsOpen: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
+  setErrors: Dispatch<SetStateAction<IError>>;
 };
 
 export const TaskDashboard: FC<TaskDashboardProps> = ({
   tasks,
   search,
+  errors,
   isOpen,
   changeSearch,
   setIsOpen,
   setTasks,
+  setErrors,
 }) => {
   return (
     <div>
@@ -32,9 +37,11 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
       </div>
       <TaskList
         tasks={tasks}
+        errors={errors}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         setTasks={setTasks}
+        setErrors={setErrors}
       />
     </div>
   );

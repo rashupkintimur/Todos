@@ -3,15 +3,18 @@ import Modal from "react-modal";
 import { FormButton } from "../FormButton";
 import { TButtonModal } from "../../types/TButtonModal";
 import { TPriotity } from "../../types/TPriotity";
+import { IError } from "../../types/IError";
 
 type TaskModalProps = {
   title: string;
   description: string;
   date: string;
   priority: TPriotity;
+  errors: IError;
   isOpen: boolean;
   typeModal: TButtonModal;
   setIsOpen: () => void;
+  setErrors: Dispatch<SetStateAction<IError>>;
   setTitle: Dispatch<SetStateAction<string>>;
   setDesciption: Dispatch<SetStateAction<string>>;
   setDate: Dispatch<SetStateAction<string>>;
@@ -31,6 +34,7 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    backgroundColor: "",
   },
 };
 
@@ -39,9 +43,11 @@ export const TaskModal: FC<TaskModalProps> = ({
   description,
   date,
   priority,
+  errors,
   isOpen,
   typeModal,
   setIsOpen,
+  setErrors,
   setTitle,
   setDesciption,
   setDate,
@@ -72,7 +78,43 @@ export const TaskModal: FC<TaskModalProps> = ({
     setPriority(event.target.value as TPriotity);
   };
 
-  const defaultFunction = () => {};
+  const checkForm = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const newErrors: IError = {};
+    const currentDate = new Date();
+
+    if (title.length < 4) {
+      newErrors.title = "Заголовок должен состоять не менее, чем из 3 символов";
+    }
+
+    if (description.length < 4) {
+      newErrors.description =
+        "Описание должно состоять не менее, чем из 3 символов";
+    }
+
+    if (!date.length) {
+      newErrors.date = "Укажите точную дату окончания";
+    }
+
+    if (currentDate > new Date(date)) {
+      newErrors.date = "Неверно указанная дата";
+    }
+
+    if (priority !== "high" && priority !== "middle" && priority !== "low") {
+      newErrors.priority = "Указан неверный приоритет";
+    }
+
+    if (!(newErrors.title || newErrors.description || newErrors.date)) {
+      if (createTask) {
+        createTask();
+      } else if (editTask) {
+        editTask();
+      }
+    } else {
+      setErrors(newErrors);
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} style={customStyles}>
@@ -93,10 +135,7 @@ export const TaskModal: FC<TaskModalProps> = ({
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
-      <form
-        className="py-5 px-5 grid gap-3"
-        onSubmit={(event: React.FormEvent) => event.preventDefault()}
-      >
+      <form className="py-5 px-5 grid gap-3" onSubmit={checkForm}>
         <div className="grid gap-3">
           <label
             htmlFor="title"
@@ -111,6 +150,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             type="text"
             className="p-2 text-slate-950 rounded border border-gray-300 dark:bg-zinc-800 dark:text-white"
           />
+          {errors.title ? <p className="text-red-500">{errors.title}</p> : null}
         </div>
         <div className="grid gap-3">
           <label
@@ -125,6 +165,9 @@ export const TaskModal: FC<TaskModalProps> = ({
             id="description"
             className="p-2 text-slate-950 rounded border border-gray-300 resize-none h-28 dark:bg-zinc-800 dark:text-white"
           />
+          {errors.description ? (
+            <p className="text-red-500">{errors.description}</p>
+          ) : null}
         </div>
         <div className="grid gap-3">
           <label
@@ -140,6 +183,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             type="date"
             className="rounded p-2 text-slate-950 border border-gray-300 cursor-pointer dark:bg-zinc-800 dark:text-white"
           />
+          {errors.date ? <p className="text-red-500">{errors.date}</p> : null}
         </div>
         <div className="grid gap-3 mb-4">
           <label
@@ -166,21 +210,14 @@ export const TaskModal: FC<TaskModalProps> = ({
               Низкий
             </option>
           </select>
+          {errors.priority ? (
+            <p className="text-red-500">{errors.priority}</p>
+          ) : null}
         </div>
         <div className="flex gap-5">
-          <FormButton
-            onClick={
-              typeModal === "create"
-                ? createTask || defaultFunction
-                : editTask || defaultFunction
-            }
-            type={typeModal}
-          />
+          <FormButton type={typeModal} />
           {typeModal === "edit" ? (
-            <FormButton
-              onClick={deleteTask || defaultFunction}
-              type={"delete"}
-            />
+            <FormButton onClick={deleteTask} type={"delete"} />
           ) : null}
         </div>
       </form>

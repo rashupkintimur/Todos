@@ -1,19 +1,24 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import { ITask } from "../../types/ITask";
 import { Task } from "../Task/Task";
+import { IError } from "../../types/IError";
 
 type TaskListProps = {
   tasks: ITask[];
+  errors: IError;
   isOpen: boolean;
   setIsOpen: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
+  setErrors: Dispatch<SetStateAction<IError>>;
 };
 
 export const TaskList: FC<TaskListProps> = ({
   tasks,
+  errors,
   isOpen,
   setIsOpen,
   setTasks,
+  setErrors,
 }) => {
   return (
     <ul className="grid gap-5">
@@ -26,9 +31,11 @@ export const TaskList: FC<TaskListProps> = ({
             date={task.date}
             priority={task.priority}
             tasks={tasks}
+            errors={errors}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             setTasks={setTasks}
+            setErrors={setErrors}
           />
         </li>
       ))}

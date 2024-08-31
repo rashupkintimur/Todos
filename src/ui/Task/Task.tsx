@@ -1,14 +1,17 @@
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { TaskModal } from "../TaskModal";
 import { ITask } from "../../types/ITask";
 import { TPriotity } from "../../types/TPriotity";
+import { IError } from "../../types/IError";
 
 type TaskProps = ITask & {
   id: number;
   tasks: ITask[];
+  errors: IError;
   isOpen: boolean;
   setIsOpen: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
+  setErrors: Dispatch<SetStateAction<IError>>;
 };
 
 export const Task: FC<TaskProps> = ({
@@ -18,9 +21,11 @@ export const Task: FC<TaskProps> = ({
   date,
   priority,
   tasks,
+  errors,
   isOpen,
   setIsOpen,
   setTasks,
+  setErrors,
 }) => {
   const [titleTask, setTitleTask] = useState(title);
   const [descriptionTask, setDescriptionTask] = useState(description);
@@ -93,9 +98,11 @@ export const Task: FC<TaskProps> = ({
         description={descriptionTask}
         date={dateTask}
         priority={priorityTask}
+        errors={errors}
         isOpen={isOpen}
         typeModal={"edit"}
         setIsOpen={setIsOpen}
+        setErrors={setErrors}
         setTitle={setTitleTask}
         setDesciption={setDescriptionTask}
         setDate={setDateTask}
