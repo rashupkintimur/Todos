@@ -9,7 +9,7 @@ type TaskProps = ITask & {
   tasks: ITask[];
   errors: IError;
   isOpen: boolean;
-  setIsOpen: () => void;
+  toggleModalEditTask: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
   setErrors: Dispatch<SetStateAction<IError>>;
 };
@@ -23,7 +23,7 @@ export const Task: FC<TaskProps> = ({
   tasks,
   errors,
   isOpen,
-  setIsOpen,
+  toggleModalEditTask,
   setTasks,
   setErrors,
 }) => {
@@ -47,7 +47,7 @@ export const Task: FC<TaskProps> = ({
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
 
-    setIsOpen();
+    toggleModalEditTask();
   };
 
   const deleteTask = () => {
@@ -56,7 +56,7 @@ export const Task: FC<TaskProps> = ({
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
 
-    setIsOpen();
+    toggleModalEditTask();
   };
 
   return (
@@ -87,8 +87,8 @@ export const Task: FC<TaskProps> = ({
           </h4>
         </div>
         <button
-          onClick={setIsOpen}
-          className="text-white rounded px-7 text-xl bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 duration-150"
+          onClick={toggleModalEditTask}
+          className="text-white rounded px-7 text-xl bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 duration-150 focus:outline-none focus:ring focus:bg-emerald-700 focus:ring-emerald-500"
         >
           Изменить
         </button>
@@ -101,7 +101,7 @@ export const Task: FC<TaskProps> = ({
         errors={errors}
         isOpen={isOpen}
         typeModal={"edit"}
-        setIsOpen={setIsOpen}
+        toggleModalTask={toggleModalEditTask}
         setErrors={setErrors}
         setTitle={setTitleTask}
         setDesciption={setDescriptionTask}

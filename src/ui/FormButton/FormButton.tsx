@@ -6,8 +6,10 @@ type FormButtonProps = {
   onClick?: () => void;
 };
 
-const createAndDeleteClass = "bg-red-500 hover:bg-red-600 active:bg-red-700";
-const editClass = "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700";
+const createAndDeleteClass =
+  "bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:bg-red-700 focus:ring-red-500";
+const editClass =
+  "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 focus:ring focus:bg-emerald-700 focus:ring-emerald-500";
 
 export const FormButton: FC<FormButtonProps> = ({
   type,

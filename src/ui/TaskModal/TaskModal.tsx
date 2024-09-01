@@ -13,7 +13,7 @@ type TaskModalProps = {
   errors: IError;
   isOpen: boolean;
   typeModal: TButtonModal;
-  setIsOpen: () => void;
+  toggleModalTask: () => void;
   setErrors: Dispatch<SetStateAction<IError>>;
   setTitle: Dispatch<SetStateAction<string>>;
   setDesciption: Dispatch<SetStateAction<string>>;
@@ -38,6 +38,9 @@ const customStyles = {
   },
 };
 
+const getErrorMessage = (error: string | undefined) =>
+  error ? <p className="text-red-500">{error}</p> : null;
+
 export const TaskModal: FC<TaskModalProps> = ({
   title,
   description,
@@ -46,7 +49,7 @@ export const TaskModal: FC<TaskModalProps> = ({
   errors,
   isOpen,
   typeModal,
-  setIsOpen,
+  toggleModalTask,
   setErrors,
   setTitle,
   setDesciption,
@@ -56,61 +59,43 @@ export const TaskModal: FC<TaskModalProps> = ({
   editTask,
   deleteTask,
 }) => {
+  // изменение фона модального окна в зависимости от темы
   if (document.body.classList.contains("dark")) {
     customStyles.content.backgroundColor = "rgb(39 39 42)";
   } else {
     customStyles.content.backgroundColor = "rgb(255, 255, 255)";
   }
 
-  const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
-  };
+  // обработчик изменений
+  const handleChange =
+    (setter: Dispatch<SetStateAction<any>>) =>
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) =>
+      setter(e.target.value);
 
-  const changeDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDesciption(event.target.value);
-  };
-
-  const changeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(event.target.value);
-  };
-
-  const changePriority = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setPriority(event.target.value as TPriotity);
-  };
-
-  const checkForm = (event: React.FormEvent) => {
-    event.preventDefault();
+  // Проверка формы
+  const checkForm = (e: React.FormEvent) => {
+    e.preventDefault();
 
     const newErrors: IError = {};
     const currentDate = new Date();
 
-    if (title.length < 4) {
-      newErrors.title = "Заголовок должен состоять не менее, чем из 3 символов";
-    }
-
-    if (description.length < 4) {
+    if (title.length < 4)
+      newErrors.title = "Заголовок должен состоять не менее, чем из 4 символов";
+    if (description.length < 4)
       newErrors.description =
-        "Описание должно состоять не менее, чем из 3 символов";
-    }
-
-    if (!date.length) {
-      newErrors.date = "Укажите точную дату окончания";
-    }
-
-    if (currentDate > new Date(date)) {
-      newErrors.date = "Неверно указанная дата";
-    }
-
-    if (priority !== "high" && priority !== "middle" && priority !== "low") {
+        "Описание должно состоять не менее, чем из 4 символов";
+    if (!date) newErrors.date = "Укажите точную дату окончания";
+    if (currentDate > new Date(date)) newErrors.date = "Неверно указанная дата";
+    if (!["high", "middle", "low"].includes(priority))
       newErrors.priority = "Указан неверный приоритет";
-    }
 
-    if (!(newErrors.title || newErrors.description || newErrors.date)) {
-      if (createTask) {
-        createTask();
-      } else if (editTask) {
-        editTask();
-      }
+    if (!Object.keys(newErrors).length) {
+      createTask?.();
+      editTask?.();
     } else {
       setErrors(newErrors);
     }
@@ -118,7 +103,10 @@ export const TaskModal: FC<TaskModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} style={customStyles}>
-      <button onClick={setIsOpen} className="absolute right-7 top-7">
+      <button
+        onClick={toggleModalTask}
+        className="absolute right-7 top-7 focus:outline-none focus:ring focus:ring-black"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -145,12 +133,12 @@ export const TaskModal: FC<TaskModalProps> = ({
           </label>
           <input
             value={title}
-            onChange={changeTitle}
+            onChange={handleChange(setTitle)}
             id="title"
             type="text"
             className="p-2 text-slate-950 rounded border border-gray-300 dark:bg-zinc-800 dark:text-white"
           />
-          {errors.title ? <p className="text-red-500">{errors.title}</p> : null}
+          {getErrorMessage(errors.title)}
         </div>
         <div className="grid gap-3">
           <label
@@ -161,13 +149,11 @@ export const TaskModal: FC<TaskModalProps> = ({
           </label>
           <textarea
             value={description}
-            onChange={changeDescription}
+            onChange={handleChange(setDesciption)}
             id="description"
             className="p-2 text-slate-950 rounded border border-gray-300 resize-none h-28 dark:bg-zinc-800 dark:text-white"
           />
-          {errors.description ? (
-            <p className="text-red-500">{errors.description}</p>
-          ) : null}
+          {getErrorMessage(errors.description)}
         </div>
         <div className="grid gap-3">
           <label
@@ -178,12 +164,12 @@ export const TaskModal: FC<TaskModalProps> = ({
           </label>
           <input
             value={date}
-            onChange={changeDate}
+            onChange={handleChange(setDate)}
             id="date"
             type="date"
             className="rounded p-2 text-slate-950 border border-gray-300 cursor-pointer dark:bg-zinc-800 dark:text-white"
           />
-          {errors.date ? <p className="text-red-500">{errors.date}</p> : null}
+          {getErrorMessage(errors.date)}
         </div>
         <div className="grid gap-3 mb-4">
           <label
@@ -193,7 +179,7 @@ export const TaskModal: FC<TaskModalProps> = ({
             Приоритет:
           </label>
           <select
-            onChange={changePriority}
+            onChange={handleChange(setPriority)}
             id="priority"
             className="block w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer dark:bg-zinc-800 dark:text-white"
           >
@@ -210,9 +196,7 @@ export const TaskModal: FC<TaskModalProps> = ({
               Низкий
             </option>
           </select>
-          {errors.priority ? (
-            <p className="text-red-500">{errors.priority}</p>
-          ) : null}
+          {getErrorMessage(errors.priority)}
         </div>
         <div className="flex gap-5">
           <FormButton type={typeModal} />

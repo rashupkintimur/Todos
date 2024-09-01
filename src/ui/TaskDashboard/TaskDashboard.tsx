@@ -9,7 +9,7 @@ type TaskDashboardProps = {
   errors: IError;
   isOpen: boolean;
   changeSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setIsOpen: () => void;
+  toggleModalEditTask: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
   setErrors: Dispatch<SetStateAction<IError>>;
 };
@@ -20,7 +20,7 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
   errors,
   isOpen,
   changeSearch,
-  setIsOpen,
+  toggleModalEditTask,
   setTasks,
   setErrors,
 }) => {
@@ -39,7 +39,7 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
         tasks={tasks}
         errors={errors}
         isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        toggleModalEditTask={toggleModalEditTask}
         setTasks={setTasks}
         setErrors={setErrors}
       />

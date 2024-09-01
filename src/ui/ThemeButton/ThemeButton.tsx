@@ -8,7 +8,11 @@ type ThemeButtonProps = {
 
 export const ThemeButton: FC<ThemeButtonProps> = ({ theme, changeTheme }) => {
   return (
-    <button onClick={changeTheme} aria-label="Смена темы">
+    <button
+      onClick={changeTheme}
+      aria-label="Смена темы"
+      className="focus:outline-none focus:ring focus:ring-red-500"
+    >
       <svg
         width="28"
         height="28"

@@ -1,10 +1,8 @@
-import { FC, useContext } from "react";
+import { useContext } from "react";
 import { ThemeButton } from "../ThemeButton";
 import { ThemeContext } from "../../context/ThemeContext";
 
-type HeaderProps = {};
-
-export const Header: FC<HeaderProps> = () => {
+export const Header = () => {
   const themeData = useContext(ThemeContext);
 
   if (!themeData) return;

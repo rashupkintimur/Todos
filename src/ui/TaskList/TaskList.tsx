@@ -7,7 +7,7 @@ type TaskListProps = {
   tasks: ITask[];
   errors: IError;
   isOpen: boolean;
-  setIsOpen: () => void;
+  toggleModalEditTask: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
   setErrors: Dispatch<SetStateAction<IError>>;
 };
@@ -16,7 +16,7 @@ export const TaskList: FC<TaskListProps> = ({
   tasks,
   errors,
   isOpen,
-  setIsOpen,
+  toggleModalEditTask,
   setTasks,
   setErrors,
 }) => {
@@ -33,7 +33,7 @@ export const TaskList: FC<TaskListProps> = ({
             tasks={tasks}
             errors={errors}
             isOpen={isOpen}
-            setIsOpen={setIsOpen}
+            toggleModalEditTask={toggleModalEditTask}
             setTasks={setTasks}
             setErrors={setErrors}
           />

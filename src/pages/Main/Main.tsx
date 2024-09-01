@@ -1,24 +1,33 @@
-import React, { FC, createContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  memo,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { ITask } from "../../types/ITask";
 import { TaskModal } from "../../ui/TaskModal";
 import { TaskDashboard } from "../../ui/TaskDashboard";
 import { TPriotity } from "../../types/TPriotity";
 import { IFormHandlerStates } from "../../types/IFormHandlerStates";
-import { getRandomNumber } from "../../utils/getRandomNumber";
 import { IError } from "../../types/IError";
-
-type MainProps = {};
+import { customAlphabet } from "nanoid";
 
 export const FormHandlersStates = createContext<IFormHandlerStates | null>(
   null
 );
+const nanoid = customAlphabet("1234567890", 10);
 
+// tasks from localStorage
 const storedTasks = localStorage.getItem("tasks");
 const storageTasks: ITask[] = storedTasks ? JSON.parse(storedTasks) : [];
 
-export const Main: FC<MainProps> = () => {
+// memo components
+const TaskDashboardMemo = memo(TaskDashboard);
+const TaskModalMemo = memo(TaskModal);
+
+export const Main = () => {
   const [tasks, setTasks] = useState<ITask[]>(storageTasks);
-  const [filtedTasks, setFiltredTasks] = useState<ITask[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -28,90 +37,90 @@ export const Main: FC<MainProps> = () => {
   const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
 
+  // Обработчик изменения поиска
   const changeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
 
-  const modalCreateTaskHandler = () => {
+  // обработчик закрытия/открытия модально окна создания задачи
+  const toggleModalCreateTask = useCallback(() => {
     setModalCreateIsOpen((prevState) => !prevState);
-    if (modalCreateIsOpen) {
-      resetForm();
-    }
-  };
+    resetForm();
+  }, []);
 
-  const modalEditTaskHandler = () => {
+  // обработчик закрытия/открытия модально окна редактирования задачи
+  const toggleModalEditTask = useCallback(() => {
     setModalEditIsOpen((prevState) => !prevState);
     resetForm();
-  };
+  }, []);
 
-  const createTask = () => {
-    const updatedTasks = [
-      ...tasks,
-      {
-        id: getRandomNumber(1, 10000000),
-        title,
-        description,
-        date,
-        priority,
-      } as ITask,
-    ];
+  // Функция создания новой задачи
+  const createTask = useCallback(() => {
+    const newTask: ITask = {
+      id: parseInt(nanoid(), 10),
+      title,
+      description,
+      date,
+      priority,
+    };
 
+    const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
 
-    modalCreateTaskHandler();
-  };
+    toggleModalCreateTask();
+  }, [tasks, title, description, date, priority, toggleModalCreateTask]);
 
-  useEffect(() => {
-    setFiltredTasks(
-      tasks.filter(
-        (task) =>
-          task.title.toLowerCase().includes(search.toLowerCase()) ||
-          task.description.toLowerCase().includes(search.toLowerCase())
-      )
+  // Мемоизация отфильтрованных задач
+  const filteredTasks = useMemo(() => {
+    return tasks.filter(
+      (task) =>
+        task.title.toLowerCase().includes(search.toLowerCase()) ||
+        task.description.toLowerCase().includes(search.toLowerCase())
     );
-  }, [search]);
+  }, [tasks, search]);
 
-  const resetForm = () => {
+  // сброс данных в форме
+  const resetForm = useCallback(() => {
     setTitle("");
     setDescription("");
     setDate("");
     setPriority("high");
     setErrors({});
-  };
+  }, []);
 
   return (
     <div className="container mx-auto px-5">
-      {filtedTasks.length ? (
-        <TaskDashboard
-          tasks={filtedTasks}
+      {filteredTasks.length ? (
+        <TaskDashboardMemo
+          tasks={filteredTasks}
           search={search}
           errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
-          setIsOpen={modalEditTaskHandler}
+          toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
           setErrors={setErrors}
         />
       ) : search.trim() ? (
-        <TaskDashboard
-          tasks={filtedTasks}
+        <TaskDashboardMemo
+          tasks={filteredTasks}
           search={search}
           errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
-          setIsOpen={modalEditTaskHandler}
+          toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
           setErrors={setErrors}
         />
       ) : tasks.length ? (
-        <TaskDashboard
-          tasks={tasks}
+        <TaskDashboardMemo
+          tasks={filteredTasks}
           search={search}
           errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
-          setIsOpen={modalEditTaskHandler}
+          toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
           setErrors={setErrors}
         />
@@ -121,12 +130,12 @@ export const Main: FC<MainProps> = () => {
         </h2>
       )}
       <button
-        onClick={modalCreateTaskHandler}
-        className="text-8xl text-white bg-black fixed bottom-16 right-24 rounded-full w-24 h-24 flex items-center justify-center bg-red-500 hover:bg-red-600 active:bg-red-700 duration-150"
+        onClick={toggleModalCreateTask}
+        className="text-8xl text-white bg-black fixed bottom-16 right-24 rounded-full w-24 h-24 flex items-center justify-center bg-red-500 hover:bg-red-600 active:bg-red-700 duration-150 focus:outline-none focus:bg-red-700 focus:ring focus:ring-red-500"
       >
         +
       </button>
-      <TaskModal
+      <TaskModalMemo
         title={title}
         description={description}
         date={date}
@@ -134,7 +143,7 @@ export const Main: FC<MainProps> = () => {
         errors={errors}
         isOpen={modalCreateIsOpen}
         typeModal={"create"}
-        setIsOpen={modalCreateTaskHandler}
+        toggleModalTask={toggleModalCreateTask}
         setErrors={setErrors}
         setTitle={setTitle}
         setDesciption={setDescription}

@@ -1,11 +1,8 @@
-import { FC } from "react";
 import { Header } from "../Header";
 import { Main } from "../../pages/Main";
 import { ThemeProvider } from "../../providers/ThemeProvider";
 
-type LayoutProps = {};
-
-export const Layout: FC<LayoutProps> = () => {
+export const Layout = () => {
   return (
     <ThemeProvider>
       <Header />
