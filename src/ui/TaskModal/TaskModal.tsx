@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 import Modal from "react-modal";
-import { FormButton } from "../FormButton";
+import { ButtonModalForm } from "../ButtonModalForm";
 import { TButtonModal } from "../../types/TButtonModal";
 import { TPriotity } from "../../types/TPriotity";
 import { IError } from "../../types/IError";
@@ -82,6 +82,7 @@ export const TaskModal: FC<TaskModalProps> = ({
 
     const newErrors: IError = {};
     const currentDate = new Date();
+    const dateUser = new Date(date);
 
     if (title.length < 4)
       newErrors.title = "Заголовок должен состоять не менее, чем из 4 символов";
@@ -89,7 +90,15 @@ export const TaskModal: FC<TaskModalProps> = ({
       newErrors.description =
         "Описание должно состоять не менее, чем из 4 символов";
     if (!date) newErrors.date = "Укажите точную дату окончания";
-    if (currentDate > new Date(date)) newErrors.date = "Неверно указанная дата";
+    if (
+      currentDate.getFullYear() > dateUser.getFullYear() ||
+      (currentDate.getFullYear() === dateUser.getFullYear() &&
+        currentDate.getMonth() > dateUser.getMonth()) ||
+      (currentDate.getFullYear() === dateUser.getFullYear() &&
+        currentDate.getMonth() === dateUser.getMonth() &&
+        currentDate.getDate() > dateUser.getDate())
+    )
+      newErrors.date = "Неверно указанная дата";
     if (!["high", "middle", "low"].includes(priority))
       newErrors.priority = "Указан неверный приоритет";
 
@@ -134,7 +143,6 @@ export const TaskModal: FC<TaskModalProps> = ({
           <input
             value={title}
             onChange={handleChange(setTitle)}
-            id="title"
             type="text"
             className="p-2 text-slate-950 rounded border border-gray-300 dark:bg-zinc-800 dark:text-white"
           />
@@ -150,7 +158,6 @@ export const TaskModal: FC<TaskModalProps> = ({
           <textarea
             value={description}
             onChange={handleChange(setDesciption)}
-            id="description"
             className="p-2 text-slate-950 rounded border border-gray-300 resize-none h-28 dark:bg-zinc-800 dark:text-white"
           />
           {getErrorMessage(errors.description)}
@@ -165,7 +172,6 @@ export const TaskModal: FC<TaskModalProps> = ({
           <input
             value={date}
             onChange={handleChange(setDate)}
-            id="date"
             type="date"
             className="rounded p-2 text-slate-950 border border-gray-300 cursor-pointer dark:bg-zinc-800 dark:text-white"
           />
@@ -180,7 +186,6 @@ export const TaskModal: FC<TaskModalProps> = ({
           </label>
           <select
             onChange={handleChange(setPriority)}
-            id="priority"
             className="block w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer dark:bg-zinc-800 dark:text-white"
           >
             <option selected={priority === "high" ? true : false} value="high">
@@ -199,9 +204,9 @@ export const TaskModal: FC<TaskModalProps> = ({
           {getErrorMessage(errors.priority)}
         </div>
         <div className="flex gap-5">
-          <FormButton type={typeModal} />
+          <ButtonModalForm type={typeModal} />
           {typeModal === "edit" ? (
-            <FormButton onClick={deleteTask} type={"delete"} />
+            <ButtonModalForm onClick={deleteTask} type={"delete"} />
           ) : null}
         </div>
       </form>

@@ -1,1 +1,1 @@
-export type TPriotity = "high" | "middle" | "low";
+export type TPriotity = "high" | "middle" | "low" | "all";

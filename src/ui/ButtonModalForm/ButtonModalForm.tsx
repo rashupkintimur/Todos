@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { TButtonModal } from "../../types/TButtonModal";
 
-type FormButtonProps = {
+type ButtonModalFormProps = {
   type: TButtonModal;
   onClick?: () => void;
 };
@@ -11,7 +11,7 @@ const createAndDeleteClass =
 const editClass =
   "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 focus:ring focus:bg-emerald-700 focus:ring-emerald-500";
 
-export const FormButton: FC<FormButtonProps> = ({
+export const ButtonModalForm: FC<ButtonModalFormProps> = ({
   type,
   onClick = () => {},
 }) => {

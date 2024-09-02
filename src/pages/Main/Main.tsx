@@ -34,12 +34,24 @@ export const Main = () => {
   const [priority, setPriority] = useState<TPriotity>("high");
   const [errors, setErrors] = useState<IError>({});
   const [search, setSearch] = useState("");
+  const [prioritySort, setPrioritySort] = useState<TPriotity>("all");
+  const [dateSort, setDateSort] = useState("");
   const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
 
   // Обработчик изменения поиска
   const changeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
+  };
+
+  // Обработчик изменения приоритета
+  const changePrioritySort = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setPrioritySort(event.target.value as TPriotity);
+  };
+
+  // Обработчик изменения даты
+  const changeDateSort = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDateSort(event.target.value);
   };
 
   // обработчик закрытия/открытия модально окна создания задачи
@@ -73,12 +85,26 @@ export const Main = () => {
 
   // Мемоизация отфильтрованных задач
   const filteredTasks = useMemo(() => {
-    return tasks.filter(
+    let filteredTasksArray = tasks.filter(
       (task) =>
         task.title.toLowerCase().includes(search.toLowerCase()) ||
         task.description.toLowerCase().includes(search.toLowerCase())
     );
-  }, [tasks, search]);
+
+    if (dateSort.length) {
+      filteredTasksArray = filteredTasksArray.filter(
+        (task) => task.date === dateSort
+      );
+    }
+
+    if (["high", "middle", "low"].includes(prioritySort)) {
+      filteredTasksArray = filteredTasksArray.filter(
+        (task) => task.priority === prioritySort
+      );
+    }
+
+    return filteredTasksArray;
+  }, [tasks, search, prioritySort, dateSort]);
 
   // сброс данных в форме
   const resetForm = useCallback(() => {
@@ -95,9 +121,12 @@ export const Main = () => {
         <TaskDashboardMemo
           tasks={filteredTasks}
           search={search}
+          date={dateSort}
           errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
+          changePrioritySort={changePrioritySort}
+          changeDateSort={changeDateSort}
           toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
           setErrors={setErrors}
@@ -106,9 +135,12 @@ export const Main = () => {
         <TaskDashboardMemo
           tasks={filteredTasks}
           search={search}
+          date={dateSort}
           errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
+          changePrioritySort={changePrioritySort}
+          changeDateSort={changeDateSort}
           toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
           setErrors={setErrors}
@@ -117,9 +149,12 @@ export const Main = () => {
         <TaskDashboardMemo
           tasks={filteredTasks}
           search={search}
+          date={dateSort}
           errors={errors}
           isOpen={modalEditIsOpen}
           changeSearch={changeSearch}
+          changePrioritySort={changePrioritySort}
+          changeDateSort={changeDateSort}
           toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
           setErrors={setErrors}
