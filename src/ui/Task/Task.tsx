@@ -1,63 +1,13 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
-import { TaskModal } from "../TaskModal";
+import { FC } from "react";
 import { ITask } from "../../types/ITask";
-import { TPriotity } from "../../types/TPriotity";
-import { IError } from "../../types/IError";
 
-type TaskProps = ITask & {
-  id: number;
-  tasks: ITask[];
-  errors: IError;
-  isOpen: boolean;
+type TaskProps = {
+  task: ITask;
   toggleModalEditTask: () => void;
-  setTasks: Dispatch<SetStateAction<ITask[]>>;
-  setErrors: Dispatch<SetStateAction<IError>>;
 };
 
-export const Task: FC<TaskProps> = ({
-  id,
-  title,
-  description,
-  date,
-  priority,
-  tasks,
-  errors,
-  isOpen,
-  toggleModalEditTask,
-  setTasks,
-  setErrors,
-}) => {
-  const [titleTask, setTitleTask] = useState(title);
-  const [descriptionTask, setDescriptionTask] = useState(description);
-  const [dateTask, setDateTask] = useState(date);
-  const [priorityTask, setPriorityTask] = useState<TPriotity>(priority);
-
-  const editTask = () => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === id) {
-        task.title = titleTask;
-        task.description = descriptionTask;
-        task.date = dateTask;
-        task.priority = priorityTask;
-      }
-
-      return task;
-    });
-
-    setTasks(updatedTasks);
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-
-    toggleModalEditTask();
-  };
-
-  const deleteTask = () => {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-
-    setTasks(updatedTasks);
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-
-    toggleModalEditTask();
-  };
+export const Task: FC<TaskProps> = ({ task, toggleModalEditTask }) => {
+  const { title, description, date, priority } = task;
 
   return (
     <div className="py-4 px-5 bg-blue-100 dark:bg-zinc-800 rounded-md flex gap-3 justify-between items-center">
@@ -93,23 +43,6 @@ export const Task: FC<TaskProps> = ({
           Изменить
         </button>
       </div>
-      <TaskModal
-        title={titleTask}
-        description={descriptionTask}
-        date={dateTask}
-        priority={priorityTask}
-        errors={errors}
-        isOpen={isOpen}
-        typeModal={"edit"}
-        toggleModalTask={toggleModalEditTask}
-        setErrors={setErrors}
-        setTitle={setTitleTask}
-        setDesciption={setDescriptionTask}
-        setDate={setDateTask}
-        setPriority={setPriorityTask}
-        editTask={editTask}
-        deleteTask={deleteTask}
-      />
     </div>
   );
 };

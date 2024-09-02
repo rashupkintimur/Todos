@@ -1,70 +1,72 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { TaskList } from "../TaskList";
 import { ITask } from "../../types/ITask";
 import { IError } from "../../types/IError";
+import { InputDate } from "../InputDate";
+import { handleChange } from "../../utils/handleChange";
+import { TPriority } from "../../types/TPriority";
+import { SelectPriority } from "../SelectPriority";
 
 type TaskDashboardProps = {
   tasks: ITask[];
-  search: string;
-  date: string;
-  errors: IError;
-  isOpen: boolean;
-  changeSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  changePrioritySort: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  changeDateSort: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  toggleModalEditTask: () => void;
   setTasks: Dispatch<SetStateAction<ITask[]>>;
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
+  dateSort: string;
+  setDateSort: Dispatch<SetStateAction<string>>;
+  errors: IError;
   setErrors: Dispatch<SetStateAction<IError>>;
+  isOpen: boolean;
+  toggleModalEditTask: () => void;
+  currentTask: ITask | undefined;
+  setCurrentTask: Dispatch<SetStateAction<ITask | undefined>>;
+  setPrioritySort: Dispatch<SetStateAction<TPriority>>;
 };
 
 export const TaskDashboard: FC<TaskDashboardProps> = ({
   tasks,
-  search,
-  date,
-  errors,
-  isOpen,
-  changeSearch,
-  changePrioritySort,
-  changeDateSort,
-  toggleModalEditTask,
   setTasks,
+  search,
+  setSearch,
+  dateSort,
+  setDateSort,
+  errors,
   setErrors,
+  isOpen,
+  toggleModalEditTask,
+  currentTask,
+  setCurrentTask,
+  setPrioritySort,
 }) => {
   return (
     <div>
       <div className="mb-10 grid grid-cols-2 gap-10">
         <input
-          onChange={changeSearch}
+          onChange={handleChange(setSearch)}
           value={search}
           className="p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white w-full"
           type="text"
           placeholder="Поиск..."
         />
         <div className="grid grid-cols-2 gap-10">
-          <select
-            onChange={changePrioritySort}
-            className="block w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer dark:bg-zinc-800 dark:text-white"
-          >
+          <SelectPriority onChange={handleChange(setPrioritySort)}>
             <option value="all">Все</option>
             <option value="high">Высокий</option>
             <option value="middle">Средний</option>
             <option value="low">Низкий</option>
-          </select>
-          <input
-            onChange={changeDateSort}
-            value={date}
-            type="date"
-            className="rounded p-2 text-slate-950 border border-gray-300 cursor-pointer dark:bg-zinc-800 dark:text-white"
-          />
+          </SelectPriority>
+          <InputDate date={dateSort} onChange={handleChange(setDateSort)} />
         </div>
       </div>
       <TaskList
         tasks={tasks}
         errors={errors}
         isOpen={isOpen}
+        currentTask={currentTask}
         toggleModalEditTask={toggleModalEditTask}
         setTasks={setTasks}
         setErrors={setErrors}
+        setCurrentTask={setCurrentTask}
       />
     </div>
   );

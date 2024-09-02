@@ -2,43 +2,58 @@ import { Dispatch, FC, SetStateAction } from "react";
 import { ITask } from "../../types/ITask";
 import { Task } from "../Task/Task";
 import { IError } from "../../types/IError";
+import { TaskModal } from "../TaskModal";
 
 type TaskListProps = {
   tasks: ITask[];
+  setTasks: Dispatch<SetStateAction<ITask[]>>;
   errors: IError;
+  setErrors: Dispatch<SetStateAction<IError>>;
   isOpen: boolean;
   toggleModalEditTask: () => void;
-  setTasks: Dispatch<SetStateAction<ITask[]>>;
-  setErrors: Dispatch<SetStateAction<IError>>;
+  currentTask: ITask | undefined;
+  setCurrentTask: Dispatch<SetStateAction<ITask | undefined>>;
 };
 
 export const TaskList: FC<TaskListProps> = ({
   tasks,
+  setTasks,
   errors,
+  setErrors,
   isOpen,
   toggleModalEditTask,
-  setTasks,
-  setErrors,
+  currentTask,
+  setCurrentTask,
 }) => {
+  const toggleModal = (task?: ITask) => {
+    if (task) {
+      setCurrentTask(task);
+    }
+
+    toggleModalEditTask();
+  };
+
   return (
-    <ul className="grid gap-5">
-      {...tasks.map((task) => (
-        <li>
-          <Task
-            id={task.id}
-            title={task.title}
-            description={task.description}
-            date={task.date}
-            priority={task.priority}
-            tasks={tasks}
-            errors={errors}
-            isOpen={isOpen}
-            toggleModalEditTask={toggleModalEditTask}
-            setTasks={setTasks}
-            setErrors={setErrors}
-          />
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul className="grid gap-5">
+        {tasks.map((task) => (
+          <li key={task.id}>
+            <Task task={task} toggleModalEditTask={() => toggleModal(task)} />
+          </li>
+        ))}
+      </ul>
+      {isOpen && currentTask && (
+        <TaskModal
+          currentTask={currentTask}
+          tasks={tasks}
+          setTasks={setTasks}
+          errors={errors}
+          setErrors={setErrors}
+          isOpen={isOpen}
+          toggleModalTask={toggleModalEditTask}
+          typeModal={"edit"}
+        />
+      )}
+    </div>
   );
 };

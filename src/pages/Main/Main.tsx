@@ -1,14 +1,8 @@
-import React, {
-  createContext,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, memo, useCallback, useMemo, useState } from "react";
 import { ITask } from "../../types/ITask";
 import { TaskModal } from "../../ui/TaskModal";
 import { TaskDashboard } from "../../ui/TaskDashboard";
-import { TPriotity } from "../../types/TPriotity";
+import { TPriority } from "../../types/TPriority";
 import { IFormHandlerStates } from "../../types/IFormHandlerStates";
 import { IError } from "../../types/IError";
 import { customAlphabet } from "nanoid";
@@ -16,7 +10,7 @@ import { customAlphabet } from "nanoid";
 export const FormHandlersStates = createContext<IFormHandlerStates | null>(
   null
 );
-const nanoid = customAlphabet("1234567890", 10);
+export const nanoid = customAlphabet("1234567890", 10);
 
 // tasks from localStorage
 const storedTasks = localStorage.getItem("tasks");
@@ -28,60 +22,23 @@ const TaskModalMemo = memo(TaskModal);
 
 export const Main = () => {
   const [tasks, setTasks] = useState<ITask[]>(storageTasks);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const [priority, setPriority] = useState<TPriotity>("high");
+  const [currentTask, setCurrentTask] = useState<ITask>();
   const [errors, setErrors] = useState<IError>({});
   const [search, setSearch] = useState("");
-  const [prioritySort, setPrioritySort] = useState<TPriotity>("all");
+  const [prioritySort, setPrioritySort] = useState<TPriority>("all");
   const [dateSort, setDateSort] = useState("");
   const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
 
-  // Обработчик изменения поиска
-  const changeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
-
-  // Обработчик изменения приоритета
-  const changePrioritySort = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setPrioritySort(event.target.value as TPriotity);
-  };
-
-  // Обработчик изменения даты
-  const changeDateSort = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDateSort(event.target.value);
-  };
-
   // обработчик закрытия/открытия модально окна создания задачи
   const toggleModalCreateTask = useCallback(() => {
     setModalCreateIsOpen((prevState) => !prevState);
-    resetForm();
   }, []);
 
   // обработчик закрытия/открытия модально окна редактирования задачи
   const toggleModalEditTask = useCallback(() => {
     setModalEditIsOpen((prevState) => !prevState);
-    resetForm();
   }, []);
-
-  // Функция создания новой задачи
-  const createTask = useCallback(() => {
-    const newTask: ITask = {
-      id: parseInt(nanoid(), 10),
-      title,
-      description,
-      date,
-      priority,
-    };
-
-    const updatedTasks = [...tasks, newTask];
-    setTasks(updatedTasks);
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-
-    toggleModalCreateTask();
-  }, [tasks, title, description, date, priority, toggleModalCreateTask]);
 
   // Мемоизация отфильтрованных задач
   const filteredTasks = useMemo(() => {
@@ -106,58 +63,55 @@ export const Main = () => {
     return filteredTasksArray;
   }, [tasks, search, prioritySort, dateSort]);
 
-  // сброс данных в форме
-  const resetForm = useCallback(() => {
-    setTitle("");
-    setDescription("");
-    setDate("");
-    setPriority("high");
-    setErrors({});
-  }, []);
-
   return (
     <div className="container mx-auto px-5">
       {filteredTasks.length ? (
         <TaskDashboardMemo
           tasks={filteredTasks}
-          search={search}
-          date={dateSort}
-          errors={errors}
-          isOpen={modalEditIsOpen}
-          changeSearch={changeSearch}
-          changePrioritySort={changePrioritySort}
-          changeDateSort={changeDateSort}
-          toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
+          search={search}
+          setSearch={setSearch}
+          dateSort={dateSort}
+          setDateSort={setDateSort}
+          errors={errors}
           setErrors={setErrors}
+          isOpen={modalEditIsOpen}
+          toggleModalEditTask={toggleModalEditTask}
+          currentTask={currentTask}
+          setCurrentTask={setCurrentTask}
+          setPrioritySort={setPrioritySort}
         />
       ) : search.trim() ? (
         <TaskDashboardMemo
           tasks={filteredTasks}
-          search={search}
-          date={dateSort}
-          errors={errors}
-          isOpen={modalEditIsOpen}
-          changeSearch={changeSearch}
-          changePrioritySort={changePrioritySort}
-          changeDateSort={changeDateSort}
-          toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
+          search={search}
+          setSearch={setSearch}
+          dateSort={dateSort}
+          setDateSort={setDateSort}
+          errors={errors}
           setErrors={setErrors}
+          isOpen={modalEditIsOpen}
+          toggleModalEditTask={toggleModalEditTask}
+          currentTask={currentTask}
+          setCurrentTask={setCurrentTask}
+          setPrioritySort={setPrioritySort}
         />
       ) : tasks.length ? (
         <TaskDashboardMemo
           tasks={filteredTasks}
-          search={search}
-          date={dateSort}
-          errors={errors}
-          isOpen={modalEditIsOpen}
-          changeSearch={changeSearch}
-          changePrioritySort={changePrioritySort}
-          changeDateSort={changeDateSort}
-          toggleModalEditTask={toggleModalEditTask}
           setTasks={setTasks}
+          search={search}
+          setSearch={setSearch}
+          dateSort={dateSort}
+          setDateSort={setDateSort}
+          errors={errors}
           setErrors={setErrors}
+          isOpen={modalEditIsOpen}
+          toggleModalEditTask={toggleModalEditTask}
+          currentTask={currentTask}
+          setCurrentTask={setCurrentTask}
+          setPrioritySort={setPrioritySort}
         />
       ) : (
         <h2 className="text-6xl text-center font-mono pt-10 font-bold text-slate-900 dark:text-white">
@@ -171,20 +125,14 @@ export const Main = () => {
         +
       </button>
       <TaskModalMemo
-        title={title}
-        description={description}
-        date={date}
-        priority={priority}
+        currentTask={currentTask}
+        tasks={tasks}
+        setTasks={setTasks}
         errors={errors}
-        isOpen={modalCreateIsOpen}
-        typeModal={"create"}
-        toggleModalTask={toggleModalCreateTask}
         setErrors={setErrors}
-        setTitle={setTitle}
-        setDesciption={setDescription}
-        setDate={setDate}
-        setPriority={setPriority}
-        createTask={createTask}
+        isOpen={modalCreateIsOpen}
+        toggleModalTask={toggleModalCreateTask}
+        typeModal={"create"}
       />
     </div>
   );
