@@ -21,6 +21,7 @@ type TaskDashboardProps = {
   currentTask: ITask | undefined;
   setCurrentTask: Dispatch<SetStateAction<ITask | undefined>>;
   setPrioritySort: Dispatch<SetStateAction<TPriority>>;
+  toggleModal: (task?: ITask) => void;
 };
 
 export const TaskDashboard: FC<TaskDashboardProps> = ({
@@ -37,18 +38,19 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
   currentTask,
   setCurrentTask,
   setPrioritySort,
+  toggleModal,
 }) => {
   return (
     <div>
-      <div className="mb-10 grid grid-cols-2 gap-10">
+      <div className="mb-10 grid lg:grid-cols-2 gap-10">
         <input
           onChange={handleChange(setSearch)}
           value={search}
-          className="p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white w-full"
+          className="text-xl p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white w-full"
           type="text"
           placeholder="Поиск..."
         />
-        <div className="grid grid-cols-2 gap-10">
+        <div className="grid sm:grid-cols-2 gap-10">
           <SelectPriority onChange={handleChange(setPrioritySort)}>
             <option value="all">Все</option>
             <option value="high">Высокий</option>
@@ -67,6 +69,7 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
         setTasks={setTasks}
         setErrors={setErrors}
         setCurrentTask={setCurrentTask}
+        toggleModal={toggleModal}
       />
     </div>
   );

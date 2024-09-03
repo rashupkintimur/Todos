@@ -10,7 +10,7 @@ export const Task: FC<TaskProps> = ({ task, toggleModalEditTask }) => {
   const { title, description, date, priority } = task;
 
   return (
-    <div className="py-4 px-5 bg-blue-100 dark:bg-zinc-800 rounded-md flex gap-3 justify-between items-center">
+    <div className="py-4 px-5 bg-blue-100 dark:bg-zinc-800 rounded-md flex gap-3 items-start flex-col md:items-center md:justify-between md:flex-row">
       <div>
         <h4 className="text-3xl text-slate-700 dark:text-white font-semibold mb-2 overflow-hidden whitespace-nowrap text-ellipsis">
           {title}
@@ -19,7 +19,7 @@ export const Task: FC<TaskProps> = ({ task, toggleModalEditTask }) => {
           {description}
         </p>
       </div>
-      <div className="flex gap-7">
+      <div className="flex gap-7 flex-col sm:flex-row sm:justify-between w-full md:w-auto">
         <div>
           <p className="text-xl mb-4 text-slate-700 dark:text-white">
             Приоритет:{" "}
@@ -38,7 +38,7 @@ export const Task: FC<TaskProps> = ({ task, toggleModalEditTask }) => {
         </div>
         <button
           onClick={toggleModalEditTask}
-          className="text-white rounded px-7 text-xl bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 duration-150 focus:outline-none focus:ring focus:bg-emerald-700 focus:ring-emerald-500"
+          className="text-white rounded p-3 sm:px-7 text-xl bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 duration-150 focus:outline-none focus:ring focus:bg-emerald-700 focus:ring-emerald-500"
         >
           Изменить
         </button>

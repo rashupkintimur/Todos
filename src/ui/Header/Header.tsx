@@ -19,7 +19,7 @@ export const Header = () => {
 
   return (
     <header className="bg-white dark:bg-zinc-800 shadow-lg shadow-black/7">
-      <div className="container mx-auto p-5 flex items-center justify-between">
+      <div className="container mx-auto lg:p-5 p-3 flex items-center justify-between">
         <h1 className="text-5xl font-mono font-bold text-slate-900 dark:text-white">
           Todos
         </h1>

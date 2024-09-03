@@ -32,13 +32,34 @@ export const Main = () => {
 
   // обработчик закрытия/открытия модально окна создания задачи
   const toggleModalCreateTask = useCallback(() => {
-    setModalCreateIsOpen((prevState) => !prevState);
+    setModalCreateIsOpen((prevState) => {
+      if (prevState) {
+        setCurrentTask(undefined);
+      }
+
+      return !prevState;
+    });
   }, []);
 
   // обработчик закрытия/открытия модально окна редактирования задачи
   const toggleModalEditTask = useCallback(() => {
-    setModalEditIsOpen((prevState) => !prevState);
+    setModalEditIsOpen((prevState) => {
+      if (prevState) {
+        setCurrentTask(undefined);
+      }
+
+      return !prevState;
+    });
   }, []);
+
+  // обработчик открытия/закрытия модального окна для редактирования с данными задачи
+  const toggleModal = (task?: ITask) => {
+    if (task) {
+      setCurrentTask(task);
+    }
+
+    toggleModalEditTask();
+  };
 
   // Мемоизация отфильтрованных задач
   const filteredTasks = useMemo(() => {
@@ -80,6 +101,7 @@ export const Main = () => {
           currentTask={currentTask}
           setCurrentTask={setCurrentTask}
           setPrioritySort={setPrioritySort}
+          toggleModal={toggleModal}
         />
       ) : search.trim() ? (
         <TaskDashboardMemo
@@ -96,6 +118,7 @@ export const Main = () => {
           currentTask={currentTask}
           setCurrentTask={setCurrentTask}
           setPrioritySort={setPrioritySort}
+          toggleModal={toggleModal}
         />
       ) : tasks.length ? (
         <TaskDashboardMemo
@@ -112,6 +135,7 @@ export const Main = () => {
           currentTask={currentTask}
           setCurrentTask={setCurrentTask}
           setPrioritySort={setPrioritySort}
+          toggleModal={toggleModal}
         />
       ) : (
         <h2 className="text-6xl text-center font-mono pt-10 font-bold text-slate-900 dark:text-white">
@@ -120,7 +144,7 @@ export const Main = () => {
       )}
       <button
         onClick={toggleModalCreateTask}
-        className="text-8xl text-white bg-black fixed bottom-16 right-24 rounded-full w-24 h-24 flex items-center justify-center bg-red-500 hover:bg-red-600 active:bg-red-700 duration-150 focus:outline-none focus:bg-red-700 focus:ring focus:ring-red-500"
+        className="text-8xl text-white bg-black fixed bottom-5 right-5 sm:bottom-16 sm:right-24 rounded-full w-24 h-24 flex items-center justify-center bg-red-500 hover:bg-red-600 active:bg-red-700 duration-150 focus:outline-none focus:bg-red-700 focus:ring focus:ring-red-500"
       >
         +
       </button>

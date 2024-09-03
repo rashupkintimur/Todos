@@ -13,6 +13,7 @@ type TaskListProps = {
   toggleModalEditTask: () => void;
   currentTask: ITask | undefined;
   setCurrentTask: Dispatch<SetStateAction<ITask | undefined>>;
+  toggleModal: (task?: ITask) => void;
 };
 
 export const TaskList: FC<TaskListProps> = ({
@@ -23,16 +24,8 @@ export const TaskList: FC<TaskListProps> = ({
   isOpen,
   toggleModalEditTask,
   currentTask,
-  setCurrentTask,
+  toggleModal,
 }) => {
-  const toggleModal = (task?: ITask) => {
-    if (task) {
-      setCurrentTask(task);
-    }
-
-    toggleModalEditTask();
-  };
-
   return (
     <div>
       <ul className="grid gap-5">
