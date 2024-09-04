@@ -141,7 +141,7 @@ export const TaskModal: FC<TaskModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative bg-white dark:bg-zinc-800 rounded-lg shadow-lg w-full sm:w-3/5 p-6">
+      <div className="relative bg-white dark:bg-zinc-800 sm:rounded-lg shadow-lg w-full h-full sm:h-auto sm:w-3/5 p-6">
         <button
           onClick={toggleModalTask}
           className="absolute right-7 top-7 focus:outline-none focus:ring focus:ring-red-500"
@@ -175,7 +175,7 @@ export const TaskModal: FC<TaskModalProps> = ({
               onChange={handleChange(setTitleTask)}
               id="title"
               type="text"
-              className="w-full p-2 text-xl text-slate-950 rounded border border-gray-300 dark:bg-zinc-800 dark:text-white"
+              className="w-full p-2 text-base sm:text-xl text-slate-950 rounded border border-gray-300 dark:bg-zinc-800 dark:text-white"
             />
             {getErrorMessage(errors.title)}
           </div>
@@ -190,7 +190,7 @@ export const TaskModal: FC<TaskModalProps> = ({
               value={descriptionTask}
               id="decription"
               onChange={handleChange(setDescriptionTask)}
-              className="p-2 text-xl text-slate-950 rounded border border-gray-300 resize-none h-28 dark:bg-zinc-800 dark:text-white"
+              className="p-2 text-base sm:text-xl text-slate-950 rounded border border-gray-300 resize-none h-28 dark:bg-zinc-800 dark:text-white"
             />
             {getErrorMessage(errors.description)}
           </div>

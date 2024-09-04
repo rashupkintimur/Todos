@@ -42,15 +42,15 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
 }) => {
   return (
     <div>
-      <div className="mb-10 grid lg:grid-cols-2 gap-10">
+      <div className="mb-10 grid lg:grid-cols-2 gap-5 sm:gap-10">
         <input
           onChange={handleChange(setSearch)}
           value={search}
-          className="text-xl p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white w-full"
+          className="text-base sm:text-xl p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white w-full"
           type="text"
           placeholder="Поиск..."
         />
-        <div className="grid sm:grid-cols-2 gap-10">
+        <div className="grid sm:grid-cols-2 gap-5 sm:gap-10">
           <SelectPriority onChange={handleChange(setPrioritySort)}>
             <option value="all">Все</option>
             <option value="high">Высокий</option>
