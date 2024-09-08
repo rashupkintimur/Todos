@@ -1,1 +1,3 @@
-export type TButtonModal = "create" | "edit" | "delete";
+import { TModalType } from "./TModalType";
+
+export type TButtonModal = TModalType | "delete" | "markDone";

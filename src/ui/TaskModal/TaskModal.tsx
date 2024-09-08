@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { ButtonModalForm } from "../ButtonModalForm";
-import { TButtonModal } from "../../types/TButtonModal";
+import { TModalType } from "../../types/TModalType";
 import { IError } from "../../types/IError";
 import { InputDate } from "../InputDate";
 import { handleChange } from "../../utils/handleChange";
@@ -17,7 +17,7 @@ type TaskModalProps = {
   setErrors: Dispatch<SetStateAction<IError>>;
   isOpen: boolean;
   toggleModalTask: () => void;
-  typeModal: TButtonModal;
+  typeModal: TModalType;
 };
 
 const getErrorMessage = (error: string | undefined) =>
@@ -34,6 +34,7 @@ export const TaskModal: FC<TaskModalProps> = ({
   typeModal,
 }) => {
   if (!isOpen) return null;
+  console.log(tasks);
 
   const [titleTask, setTitleTask] = useState(currentTask?.title || "");
   const [descriptionTask, setDescriptionTask] = useState(
@@ -52,6 +53,7 @@ export const TaskModal: FC<TaskModalProps> = ({
       description: descriptionTask,
       date: dateTask,
       priority: priorityTask,
+      isDone: false,
     };
 
     const updatedTasks = [...tasks, newTask];
@@ -64,6 +66,7 @@ export const TaskModal: FC<TaskModalProps> = ({
 
   // редактируем задание
   const editTask = () => {
+    console.log(tasks);
     const updatedTasks = tasks.map((task) =>
       task.id === currentTask?.id
         ? {
@@ -75,6 +78,7 @@ export const TaskModal: FC<TaskModalProps> = ({
           }
         : task
     );
+    console.log(updatedTasks);
 
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
@@ -87,6 +91,26 @@ export const TaskModal: FC<TaskModalProps> = ({
   const deleteTask = () => {
     if (currentTask) {
       const updatedTasks = tasks.filter((task) => task.id !== currentTask.id);
+
+      setTasks(updatedTasks);
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+
+      toggleModalTask();
+      resetForm();
+    }
+  };
+
+  // пометить задание
+  const markDone = () => {
+    if (currentTask) {
+      const updatedTasks = tasks.map((task) =>
+        task.id === currentTask?.id
+          ? {
+              ...task,
+              isDone: !task.isDone,
+            }
+          : task
+      );
 
       setTasks(updatedTasks);
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));
@@ -243,7 +267,10 @@ export const TaskModal: FC<TaskModalProps> = ({
           <div className="flex gap-5">
             <ButtonModalForm type={typeModal} />
             {typeModal === "edit" ? (
-              <ButtonModalForm onClick={deleteTask} type={"delete"} />
+              <>
+                <ButtonModalForm onClick={deleteTask} type={"delete"} />
+                <ButtonModalForm onClick={markDone} type={"markDone"} />
+              </>
             ) : null}
           </div>
         </form>

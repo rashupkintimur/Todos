@@ -10,6 +10,8 @@ import { SelectPriority } from "../SelectPriority";
 type TaskDashboardProps = {
   tasks: ITask[];
   setTasks: Dispatch<SetStateAction<ITask[]>>;
+  expiredTasks: ITask[];
+  unexpiredTasks: ITask[];
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
   dateSort: string;
@@ -27,6 +29,8 @@ type TaskDashboardProps = {
 export const TaskDashboard: FC<TaskDashboardProps> = ({
   tasks,
   setTasks,
+  expiredTasks,
+  unexpiredTasks,
   search,
   setSearch,
   dateSort,
@@ -62,13 +66,15 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
       </div>
       <TaskList
         tasks={tasks}
+        setTasks={setTasks}
+        expiredTasks={expiredTasks}
+        unexpiredTasks={unexpiredTasks}
         errors={errors}
+        setErrors={setErrors}
         isOpen={isOpen}
         currentTask={currentTask}
-        toggleModalEditTask={toggleModalEditTask}
-        setTasks={setTasks}
-        setErrors={setErrors}
         setCurrentTask={setCurrentTask}
+        toggleModalEditTask={toggleModalEditTask}
         toggleModal={toggleModal}
       />
     </div>

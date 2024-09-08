@@ -6,15 +6,22 @@ import { TPriority } from "../../types/TPriority";
 import { IFormHandlerStates } from "../../types/IFormHandlerStates";
 import { IError } from "../../types/IError";
 import { customAlphabet } from "nanoid";
+import { expireTasks } from "../../utils/expireTasks";
+import { unexpireTasks } from "../../utils/unexpireTask";
 
 export const FormHandlersStates = createContext<IFormHandlerStates | null>(
   null
 );
 export const nanoid = customAlphabet("1234567890", 10);
+const currentDate = new Date();
 
 // tasks from localStorage
 const storedTasks = localStorage.getItem("tasks");
 const storageTasks: ITask[] = storedTasks ? JSON.parse(storedTasks) : [];
+
+// список истёкших и не истёкших задач (по времени)
+let expiredTasks: ITask[] = [];
+let unexpiredTasks: ITask[] = [];
 
 // memo components
 const TaskDashboardMemo = memo(TaskDashboard);
@@ -81,6 +88,9 @@ export const Main = () => {
       );
     }
 
+    expiredTasks = expireTasks(currentDate, filteredTasksArray);
+    unexpiredTasks = unexpireTasks(currentDate, filteredTasksArray);
+
     return filteredTasksArray;
   }, [tasks, search, prioritySort, dateSort]);
 
@@ -90,6 +100,8 @@ export const Main = () => {
         <TaskDashboardMemo
           tasks={filteredTasks}
           setTasks={setTasks}
+          expiredTasks={expiredTasks}
+          unexpiredTasks={unexpiredTasks}
           search={search}
           setSearch={setSearch}
           dateSort={dateSort}
@@ -107,6 +119,8 @@ export const Main = () => {
         <TaskDashboardMemo
           tasks={filteredTasks}
           setTasks={setTasks}
+          expiredTasks={expiredTasks}
+          unexpiredTasks={unexpiredTasks}
           search={search}
           setSearch={setSearch}
           dateSort={dateSort}
@@ -124,6 +138,8 @@ export const Main = () => {
         <TaskDashboardMemo
           tasks={filteredTasks}
           setTasks={setTasks}
+          expiredTasks={expiredTasks}
+          unexpiredTasks={unexpiredTasks}
           search={search}
           setSearch={setSearch}
           dateSort={dateSort}
