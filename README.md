@@ -1,50 +1,65 @@
-# React + TypeScript + Vite
+# Todos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание
 
-Currently, two official plugins are available:
+**Todos** - это инструмент для управления задачами, который позволяет пользователям легко создавать, отслеживать и организовывать свои повседневные задачи. Приложение поддерживает функциональность добавления задач, их редактирования, удаления и пометки как выполненных. Это приложение предназначено для использования как на десктопах, так и на мобильных устройствах, обеспечивая удобный и интуитивно понятный интерфейс.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Основные особенности
 
-## Expanding the ESLint configuration
+- **Создание задач** - Пользователи могут добавлять новые задачи с описанием и сроком выполнения.
+  Возможность задавать приоритет для задач (высокий, средний, низкий).
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Просмотр задач** - Задачи отображаются в виде списка с возможностью фильтрации по статусу (все, активные, выполненные).
+  Задачи могут быть отсортированы по дате создания, сроку выполнения или приоритету.
 
-- Configure the top-level `parserOptions` property like this:
+- **Редактирование задач** - Пользователи могут изменять описание, срок выполнения и приоритет задач. Возможность изменения статуса задачи (выполнена/невыполнена).
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Удаление задач** - Пользователи могут удалять задачи из списка.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **Пометка задач как выполненных** - Задачи могут быть отмечены как выполненные, что позволяет отслеживать прогресс выполнения.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **Поиск задач** - Возможность поиска задач по ключевым словам или фильтрации по дате и приоритету.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- **Адаптивный интерфейс** - Приложение оптимизировано для различных устройств, включая мобильные телефоны и планшеты.
+
+### Структура проекта
+
+`index.html` - Основной HTML файл
+
+- `src/` - Исходный код.
+  - `App.tsx` - Главый компонент.
+  - `main.tsx` - Компонент отрисовывающий App-компонент.
+  - `utils/` - Каталог со доп. функциями.
+  - `ui/` - Каталог с ui компонентами.
+  - `providers/` - Каталог с React-провайдерами.
+  - `pages/` - Каталог с компонентами с бизнес-логикой.
+  - `types/` - Каталог с типами и интерефейсами.
+  - `context/` - Каталог с контекстами.
+  - `assets/` - Каталог с ресурами проекта.
+- `package.json` - Файл зависимостей и скриптов.
+- `tsconfig.json` - Файл с конфигурацией TypeScript.
+- `vite.config.ts` - Файл с конфигурацией Vite
+- `tsconfig.node.json` - Файл с конфигурацией TypeScript при работе с Node.js
+- `.gitignore` - Файл с исключением отслеживания git каталогов и файлов
+- `.eslintrc.cjs` - Файл с настройкой линтера ESLint
+- `.editorconfig` - Файл с настройкой плагина editorconfig
+
+### Установка
+
+1. Установка репозитория.
+
+````bash
+git clone https://github.com/rashupkintimur/todos.git
+
+2. Перейдите в репозиторий и установите зависимости.
+
+```bash
+cd Todos && npm i
+
+3. Запустите проект
+
+```bash
+npm run dev
+
+4. Откройте браузер и перейдите по адресу http://localhost:3000
+````
