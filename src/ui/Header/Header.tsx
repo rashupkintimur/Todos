@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { ThemeButton } from "../ThemeButton";
 import { ThemeContext } from "../../context/ThemeContext";
+import { LanguageSwitcher } from "../LanguageSwitcher";
 
 export const Header = () => {
   const themeData = useContext(ThemeContext);
@@ -19,11 +20,14 @@ export const Header = () => {
 
   return (
     <header className="bg-white dark:bg-zinc-800 shadow-lg shadow-black/7">
-      <div className="container mx-auto lg:p-5 p-3 flex items-center justify-between">
-        <h1 className="text-5xl font-mono font-bold text-slate-900 dark:text-white">
+      <div className="container mx-auto lg:p-5 p-3 grid gap-5 sm:flex sm:items-center sm:justify-between">
+        <h1 className="text-5xl justify-self-center font-mono font-bold text-slate-900 dark:text-white">
           Todos
         </h1>
-        <ThemeButton theme={theme} changeTheme={changeTheme} />
+        <div className="justify-self-center flex items-center gap-5 sm:gap-20">
+          <LanguageSwitcher />
+          <ThemeButton theme={theme} changeTheme={changeTheme} />
+        </div>
       </div>
     </header>
   );

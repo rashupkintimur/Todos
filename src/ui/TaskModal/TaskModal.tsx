@@ -8,6 +8,7 @@ import { SelectPriority } from "../SelectPriority";
 import { ITask } from "../../types/ITask";
 import { nanoid } from "../../pages/Main";
 import { TPriority } from "../../types/TPriority";
+import { TFunction } from "i18next";
 
 type TaskModalProps = {
   currentTask: ITask | undefined;
@@ -18,6 +19,7 @@ type TaskModalProps = {
   isOpen: boolean;
   toggleModalTask: () => void;
   typeModal: TModalType;
+  t: TFunction<"translation", undefined>;
 };
 
 const getErrorMessage = (error: string | undefined) =>
@@ -32,9 +34,9 @@ export const TaskModal: FC<TaskModalProps> = ({
   isOpen,
   toggleModalTask,
   typeModal,
+  t,
 }) => {
   if (!isOpen) return null;
-  console.log(tasks);
 
   const [titleTask, setTitleTask] = useState(currentTask?.title || "");
   const [descriptionTask, setDescriptionTask] = useState(
@@ -192,7 +194,7 @@ export const TaskModal: FC<TaskModalProps> = ({
               htmlFor="title"
               className="text-2xl cursor-pointer dark:text-white"
             >
-              Заголовок:
+              {t("title")}:
             </label>
             <input
               value={titleTask}
@@ -208,7 +210,7 @@ export const TaskModal: FC<TaskModalProps> = ({
               htmlFor="description"
               className="text-2xl cursor-pointer dark:text-white"
             >
-              Описание:
+              {t("description")}:
             </label>
             <textarea
               value={descriptionTask}
@@ -223,7 +225,7 @@ export const TaskModal: FC<TaskModalProps> = ({
               htmlFor="date"
               className="text-2xl cursor-pointer dark:text-white"
             >
-              Дата окончания:
+              {t("dateOfEnd")}:
             </label>
             <InputDate
               id={"date"}
@@ -237,7 +239,7 @@ export const TaskModal: FC<TaskModalProps> = ({
               htmlFor="priority"
               className="text-2xl cursor-pointer dark:text-white"
             >
-              Приоритет:
+              {t("priority")}:
             </label>
             <SelectPriority
               id={"priority"}
@@ -247,29 +249,29 @@ export const TaskModal: FC<TaskModalProps> = ({
                 selected={priorityTask === "high" ? true : false}
                 value="high"
               >
-                Высокий
+                {t("high")}
               </option>
               <option
                 selected={priorityTask === "middle" ? true : false}
                 value="middle"
               >
-                Средний
+                {t("middle")}
               </option>
               <option
                 selected={priorityTask === "low" ? true : false}
                 value="low"
               >
-                Низкий
+                {t("low")}
               </option>
             </SelectPriority>
             {getErrorMessage(errors.priority)}
           </div>
           <div className="flex gap-5">
-            <ButtonModalForm type={typeModal} />
+            <ButtonModalForm type={typeModal} t={t} />
             {typeModal === "edit" ? (
               <>
-                <ButtonModalForm onClick={deleteTask} type={"delete"} />
-                <ButtonModalForm onClick={markDone} type={"markDone"} />
+                <ButtonModalForm onClick={deleteTask} type={"delete"} t={t} />
+                <ButtonModalForm onClick={markDone} type={"markDone"} t={t} />
               </>
             ) : null}
           </div>

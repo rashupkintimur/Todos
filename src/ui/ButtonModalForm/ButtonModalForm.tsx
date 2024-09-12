@@ -1,9 +1,11 @@
 import { FC } from "react";
 import { TButtonModal } from "../../types/TButtonModal";
+import { TFunction } from "i18next";
 
 type ButtonModalFormProps = {
   type: TButtonModal;
   onClick?: () => void;
+  t: TFunction<"translation", undefined>;
 };
 
 const createAndDeleteClass =
@@ -16,6 +18,7 @@ const editClass =
 export const ButtonModalForm: FC<ButtonModalFormProps> = ({
   type,
   onClick = () => {},
+  t,
 }) => {
   return (
     <button
@@ -29,12 +32,12 @@ export const ButtonModalForm: FC<ButtonModalFormProps> = ({
       } text-lg text-white px-4 py-2 rounded justify-self-start`}
     >
       {type === "create"
-        ? "Создать"
+        ? t("create")
         : type === "edit"
-        ? "Изменить"
+        ? t("edit")
         : type === "markDone"
-        ? "Пометить"
-        : "Удалить"}
+        ? t("mark")
+        : t("delete")}
     </button>
   );
 };

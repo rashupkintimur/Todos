@@ -17,7 +17,7 @@ export const InputDate: FC<InputDateProps> = ({ id, date, onChange }) => {
       value={date}
       onChange={onChange}
       type="date"
-      className="text-base sm:text-xl rounded p-2 text-slate-950 border border-gray-300 cursor-pointer dark:bg-zinc-800 dark:text-white"
+      className="text-base text-xl rounded p-2 text-slate-950 border border-gray-300 cursor-pointer dark:bg-zinc-800 dark:text-white"
     />
   );
 };

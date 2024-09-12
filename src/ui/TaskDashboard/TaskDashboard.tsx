@@ -6,6 +6,7 @@ import { InputDate } from "../InputDate";
 import { handleChange } from "../../utils/handleChange";
 import { TPriority } from "../../types/TPriority";
 import { SelectPriority } from "../SelectPriority";
+import { TFunction } from "i18next";
 
 type TaskDashboardProps = {
   tasks: ITask[];
@@ -24,6 +25,7 @@ type TaskDashboardProps = {
   setCurrentTask: Dispatch<SetStateAction<ITask | undefined>>;
   setPrioritySort: Dispatch<SetStateAction<TPriority>>;
   toggleModal: (task?: ITask) => void;
+  t: TFunction<"translation", undefined>;
 };
 
 export const TaskDashboard: FC<TaskDashboardProps> = ({
@@ -43,6 +45,7 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
   setCurrentTask,
   setPrioritySort,
   toggleModal,
+  t,
 }) => {
   return (
     <div>
@@ -50,16 +53,16 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
         <input
           onChange={handleChange(setSearch)}
           value={search}
-          className="text-base sm:text-xl p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white w-full"
+          className="text-base text-xl p-3 rounded border border-gray-300 w-1/3 dark:bg-zinc-800 dark:text-white w-full"
           type="text"
-          placeholder="Поиск..."
+          placeholder={t("search")}
         />
         <div className="grid sm:grid-cols-2 gap-5 sm:gap-10">
           <SelectPriority onChange={handleChange(setPrioritySort)}>
-            <option value="all">Все</option>
-            <option value="high">Высокий</option>
-            <option value="middle">Средний</option>
-            <option value="low">Низкий</option>
+            <option value="all">{t("all")}</option>
+            <option value="high">{t("high")}</option>
+            <option value="middle">{t("middle")}</option>
+            <option value="low">{t("low")}</option>
           </SelectPriority>
           <InputDate date={dateSort} onChange={handleChange(setDateSort)} />
         </div>
@@ -76,6 +79,7 @@ export const TaskDashboard: FC<TaskDashboardProps> = ({
         setCurrentTask={setCurrentTask}
         toggleModalEditTask={toggleModalEditTask}
         toggleModal={toggleModal}
+        t={t}
       />
     </div>
   );

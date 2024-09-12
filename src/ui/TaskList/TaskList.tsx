@@ -3,6 +3,7 @@ import { ITask } from "../../types/ITask";
 import { Task } from "../Task/Task";
 import { IError } from "../../types/IError";
 import { TaskModal } from "../TaskModal";
+import { TFunction } from "i18next";
 
 type TaskListProps = {
   tasks: ITask[];
@@ -16,6 +17,7 @@ type TaskListProps = {
   currentTask: ITask | undefined;
   setCurrentTask: Dispatch<SetStateAction<ITask | undefined>>;
   toggleModal: (task?: ITask) => void;
+  t: TFunction<"translation", undefined>;
 };
 
 export const TaskList: FC<TaskListProps> = ({
@@ -29,22 +31,26 @@ export const TaskList: FC<TaskListProps> = ({
   toggleModalEditTask,
   currentTask,
   toggleModal,
+  t,
 }) => {
   return (
     <div>
-      <ul className="grid gap-5">
-        {unexpiredTasks.map((task) => (
-          <li key={task.id}>
-            <Task
-              task={task}
-              toggleModalEditTask={() => toggleModal(task)}
-              isExpired={false}
-            />
-          </li>
-        ))}
-      </ul>
+      {unexpiredTasks.length ? (
+        <ul className="grid gap-5 mb-5">
+          {unexpiredTasks.map((task) => (
+            <li key={task.id}>
+              <Task
+                task={task}
+                toggleModalEditTask={() => toggleModal(task)}
+                isExpired={false}
+                t={t}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : null}
       {expiredTasks.length ? (
-        <div className="mt-5">
+        <div>
           <h3 className="text-slate-700 dark:text-slate-200 text-4xl mb-5 font-bold">
             Истёкшие невыполенные задачи:
           </h3>
@@ -55,6 +61,7 @@ export const TaskList: FC<TaskListProps> = ({
                   task={task}
                   toggleModalEditTask={() => toggleModal(task)}
                   isExpired={true}
+                  t={t}
                 />
               </li>
             ))}
@@ -71,6 +78,7 @@ export const TaskList: FC<TaskListProps> = ({
           isOpen={isOpen}
           toggleModalTask={toggleModalEditTask}
           typeModal={"edit"}
+          t={t}
         />
       )}
     </div>

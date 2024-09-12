@@ -1,0 +1,18 @@
+{
+  "taskListEmpty": "There are no tasks yet... 😥",
+  "title": "Title",
+  "description": "Description",
+  "dateOfEnd": "Date of end",
+  "priority": "Priority",
+  "all": "All",
+  "high": "High",
+  "middle": "Middle",
+  "low": "Low",
+  "create": "Create",
+  "edit": "Edit",
+  "delete": "Delete",
+  "mark": "Mark",
+  "search": "Search...",
+  "russian": "Russia",
+  "english": "English"
+}

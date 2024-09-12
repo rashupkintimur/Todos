@@ -8,6 +8,7 @@ import { IError } from "../../types/IError";
 import { customAlphabet } from "nanoid";
 import { expireTasks } from "../../utils/expireTasks";
 import { unexpireTasks } from "../../utils/unexpireTask";
+import { useTranslation } from "react-i18next";
 
 export const FormHandlersStates = createContext<IFormHandlerStates | null>(
   null
@@ -36,6 +37,7 @@ export const Main = () => {
   const [dateSort, setDateSort] = useState("");
   const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false);
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   // обработчик закрытия/открытия модально окна создания задачи
   const toggleModalCreateTask = useCallback(() => {
@@ -114,6 +116,7 @@ export const Main = () => {
           setCurrentTask={setCurrentTask}
           setPrioritySort={setPrioritySort}
           toggleModal={toggleModal}
+          t={t}
         />
       ) : search.trim() ? (
         <TaskDashboardMemo
@@ -133,6 +136,7 @@ export const Main = () => {
           setCurrentTask={setCurrentTask}
           setPrioritySort={setPrioritySort}
           toggleModal={toggleModal}
+          t={t}
         />
       ) : tasks.length ? (
         <TaskDashboardMemo
@@ -152,10 +156,11 @@ export const Main = () => {
           setCurrentTask={setCurrentTask}
           setPrioritySort={setPrioritySort}
           toggleModal={toggleModal}
+          t={t}
         />
       ) : (
         <h2 className="text-6xl text-center font-mono pt-10 font-bold text-slate-900 dark:text-white">
-          Задач пока нет... 😥
+          {t("taskListEmpty")}
         </h2>
       )}
       <button
@@ -173,6 +178,7 @@ export const Main = () => {
         isOpen={modalCreateIsOpen}
         toggleModalTask={toggleModalCreateTask}
         typeModal={"create"}
+        t={t}
       />
     </div>
   );
