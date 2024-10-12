@@ -50,18 +50,20 @@
 
 1. Установка репозитория.
 
-````bash
+```bash
 git clone https://github.com/rashupkintimur/todos.git
+```
 
 2. Перейдите в репозиторий и установите зависимости.
 
 ```bash
 cd Todos && npm i
+```
 
 3. Запустите проект
 
 ```bash
 npm run dev
+```
 
 4. Откройте браузер и перейдите по адресу http://localhost:3000
-````
