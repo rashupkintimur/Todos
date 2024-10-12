@@ -51,7 +51,7 @@
 1. Установка репозитория.
 
 ```bash
-git clone https://github.com/rashupkintimur/todos.git
+git clone https://github.com/rashupkintimur/Todos.git
 ```
 
 2. Перейдите в репозиторий и установите зависимости.
